@@ -85,13 +85,13 @@
               </ul> -->
             </li>
             <li class="nav-item">
-              <a href="#team" class="nav-link">
-                Our Team
+              <a href="javascript:void(0)" class="nav-link">
+                About Us
               </a>
             </li>
             <li class="nav-item">
-              <a href="javascript:void(0)" class="nav-link">
-                About Us
+              <a href="#team" class="nav-link">
+                Our Team
               </a>
             </li>
             <li class="nav-item">
@@ -315,13 +315,13 @@
           </div> -->
         </div>
         <div class="accordion-item">
-          <a class="accordion-link without-icon" href="#team">
-            Our Team
+          <a class="accordion-link without-icon" href="javascript:void(0)">
+            About Us
           </a>
         </div>
         <div class="accordion-item">
-          <a class="accordion-link without-icon" href="javascript:void(0)">
-            About Us
+          <a class="accordion-link without-icon" href="#team">
+            Our Team
           </a>
         </div>
         <div class="accordion-item">
@@ -1499,6 +1499,17 @@
     </script>
   <script type="module" src="assets/js/main3d.js"></script>
 
+  <script>
+    document.querySelectorAll('.offcanvas .accordion-link, .offcanvas .accordion-button').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var offcanvas = document.querySelector('.offcanvas.show');
+        if (offcanvas) {
+          var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+          if (bsOffcanvas) bsOffcanvas.hide();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
