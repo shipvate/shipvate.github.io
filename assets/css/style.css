@@ -1126,7 +1126,7 @@ Features Area CSS
 Features Area 2 CSS
 =================================================*/
 .features-section-2{
-  background-image: url(../img/banner/background-5.png);
+  /* background-image: url(../img/banner/background-5.png); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1697,7 +1697,7 @@ Brand Area CSS
 Team Area CSS
 =================================================*/
 .team-section{
-  background-image: url(../img/banner/background-5.png);
+  /* background-image: url(../img/banner/background-5.png); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -3300,7 +3300,7 @@ Service Area CSS
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url(../img/banner/background-7.png);
+  /* background-image: url(../img/banner/background-7.png); */
 }
 .process-wrap .process-content .process-item-wrap {
   margin: 38px 0 0;

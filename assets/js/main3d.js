@@ -730,3 +730,13 @@ function autoMobilePerformanceTuning() {
   }
 }
 autoMobilePerformanceTuning();
+
+document.querySelectorAll('.offcanvas .accordion-link, .offcanvas .accordion-button').forEach(function(el) {
+	el.addEventListener('click', function() {
+	var offcanvas = document.querySelector('.offcanvas.show');
+	if (offcanvas) {
+		var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+		if (bsOffcanvas) bsOffcanvas.hide();
+	}
+	});
+});
