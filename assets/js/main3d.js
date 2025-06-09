@@ -148,6 +148,9 @@ init();
 
 async function init() {
   const container = document.querySelector('.canvas3D');
+  // Safety: remove old canvas to avoid duplicate append or canvas misplacement
+  container.querySelectorAll('canvas').forEach(c => c.remove());
+
   const width = container.clientWidth;
   const height = container.clientHeight;
 
@@ -653,3 +656,75 @@ function onVisibilityChange() {
   }
 }
 document.addEventListener('visibilitychange', onVisibilityChange);
+
+// --- Pause/Resume animation when canvas3D is not visible (save resources) ---
+function setupCanvasVisibilityPause() {
+  const container = document.querySelector('.canvas3D');
+  if (!container) return;
+  // Force resume animation at start to avoid observer misjudgment
+  if (renderer && typeof render === 'function') {
+    renderer.setAnimationLoop(render);
+    animationPaused = false;
+  }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        // Skip if layout not ready
+        if (entry.boundingClientRect.height === 0 || entry.boundingClientRect.width === 0) return;
+        // Only resume if intersectionRatio > 0.2
+        if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
+          if (animationPaused === false) return;
+          renderer.setAnimationLoop(render);
+          animationPaused = false;
+        } else {
+          if (animationPaused === true) return;
+          renderer.setAnimationLoop(null);
+          animationPaused = true;
+        }
+      });
+    }, { threshold: 0.2 });
+    observer.observe(container);
+  } else {
+    // Fallback: scroll event (older browsers)
+    window.addEventListener('scroll', () => {
+      const rect = container.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+      if (inView) {
+        if (animationPaused === false) return;
+        renderer.setAnimationLoop(render);
+        animationPaused = false;
+      } else {
+        if (animationPaused === true) return;
+        renderer.setAnimationLoop(null);
+        animationPaused = true;
+      }
+    });
+  }
+}
+setupCanvasVisibilityPause();
+
+// --- Auto-tune for mobile/low-end devices ---
+function autoMobilePerformanceTuning() {
+  // Detect low-end devices
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
+  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 4;
+  // alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
+  // alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
+  if (isMobile || lowCore || lowMem) {
+    // Reduce particle counts
+    config.star.count = 800;
+    config.flame.count = 6000;
+    config.meteor.count = 80;
+    // Reduce particle size
+    config.star.size = 2;
+    config.flame.size = 80;
+    // Lower bloom strength
+    config.bloom.strength = 0.7;
+    config.bloom.radius = 0.7;
+    // Lower render FOV
+    config.camera.fov = 34;
+    // Optionally: disable some effects if needed
+  }
+}
+autoMobilePerformanceTuning();
