@@ -262,9 +262,9 @@
                 <i class='bx bx-search'></i>
               </button>
             </div> -->
-            <div class="option-item">
+            <!-- <div class="option-item">
               <img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=wz98yzxj5xdpxyaaw9year7yb4n25nul" border="0" width="120"></a>
-            </div>
+            </div> -->
           </div>
         </div>
       </nav>
@@ -615,6 +615,36 @@
       </div>
     </div>
     <div class="canvas3D" style="width: 100%; height: 100%; position: absolute; z-index: 0; pointer-events: auto;"></div>
+    <div id="dashboard" style="position: absolute; top: 24px; right: 24px; background: linear-gradient(135deg, rgba(10,20,40,0.92) 60%, rgba(0,234,255,0.18) 100%); box-shadow: 0 0 32px #00eaff55, 0 0 0 2px #00eaff44 inset; border: 1.5px solid #00eaff; border-radius: 18px; padding: 22px 28px 18px 28px; z-index: 10; min-width: 200px; backdrop-filter: blur(4px);">
+      <div id="dashboard-inner" style="display: flex; flex-direction: column; align-items: flex-end; gap: 22px;">
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <span style="font-size: 16px; color: #00eaff; letter-spacing: 2.5px; font-family: 'Orbitron', monospace; text-shadow: 0 0 8px #00eaff99;">HITS #</span>
+          <div style="width: 84px; height: 84px; background: linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%); border: 2.5px solid #00eaff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px #00eaff77, 0 0 0 4px #00eaff22 inset;">
+            <span id="hitTimes" style="font-size: 2.5em; color: #00eaff; font-family: 'Orbitron', monospace; font-weight: bold; text-shadow: 0 0 12px #00eaffcc; letter-spacing: 1.5px;">0</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <span style="font-size: 16px; color: #00eaff; letter-spacing: 2.5px; font-family: 'Orbitron', monospace; text-shadow: 0 0 8px #00eaff99;">SPEED</span>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+            <svg width="92" height="18" style="display:block;"><rect x="2" y="6" width="88" height="6" rx="3" fill="#001a22" stroke="#00eaff" stroke-width="2.2"/><rect id="speedBar" x="2" y="6" width="0" height="6" rx="3" fill="url(#speedGrad)"/>
+              <defs><linearGradient id="speedGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00eaff"/><stop offset="100%" stop-color="#00ffd0"/></linearGradient></defs>
+            </svg>
+            <div style="display: flex; align-items: baseline; margin-top:2px;">
+              <span id="speedValue" style="font-size: 1.3em; color: #00ffd0; font-family: 'Orbitron', monospace; font-weight: bold; min-width: 38px; text-align: right; text-shadow: 0 0 8px #00ffd099;">0</span>
+              <span style="font-size: 0.95em; color: #00ffd0; margin-left:4px; text-shadow: 0 0 6px #00ffd099;">km/s</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <span style="font-size: 16px; color: #00eaff; letter-spacing: 2.5px; font-family: 'Orbitron', monospace; text-shadow: 0 0 8px #00eaff99;">FUELS</span>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+            <div style="display: flex; align-items: baseline; margin-top:2px;">
+              <img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=j5jp7ka4st5adcmhuw1letwrw1ujg4u9" border="0" width="92" alt="counter" style="filter: drop-shadow(0 0 8px #00eaff88); border-radius: 6px; background: rgba(0,234,255,0.08); padding: 2px 6px;"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- Start Hero Section -->
 

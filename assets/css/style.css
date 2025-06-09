@@ -6188,3 +6188,9 @@ Go Top CSS
   background-color: var(--blackColor);
   color: var(--whiteColor);
 }
+
+@media (max-width: 767px) {
+  #dashboard {
+    display: none !important;
+  }
+}

@@ -144,6 +144,8 @@ const flameCount = config.flame.count; // Significantly increased flame particle
 let meteorMeshes = [];
 let meteorGroup = null;
 
+let hitTimes = 0;
+
 init();
 
 async function init() {
@@ -292,6 +294,11 @@ async function init() {
     }
     let cam = new THREE.Vector3(0, 0, 0);
     if (spaceship) spaceship.localToWorld(cam.set(0, 0, 0));
+    // Gradually update speed
+    let targetSpeed = 800 + Math.random() * 900; // 800~1700 km/s
+    // Smoothly display speed
+    speedDisplay += (targetSpeed - speedDisplay) * Math.min(1, delta * 2.5); // The larger the delta, the faster the change
+    updateSpeedDisplay(speedDisplay);
     for (let i = 0; i < meteorMeshes.length; i++) {
       const info = meteorInfos[i];
       // All meteors move synchronously, only use their own offset to determine phase
@@ -314,9 +321,12 @@ async function init() {
         const shipPos = new THREE.Vector3();
         spaceship.getWorldPosition(shipPos);
         const dist = meteorPos.distanceTo(shipPos);
-        if (dist < config.meteor.collisionDistance && info.cooldown <= 0) { // increase hit detection distance
+        if (dist < config.meteor.collisionDistance && info.cooldown <= 0) {
           createSpark(meteorPos);
-          info.cooldown = config.meteor.cooldown; // 0.5s cooldown
+          info.cooldown = config.meteor.cooldown;
+          hitTimes++;
+          const hitDom = document.getElementById('hitTimes');
+          if (hitDom) hitDom.textContent = hitTimes;
         }
       }
       // Cooldown countdown
@@ -556,6 +566,19 @@ container.addEventListener('click', (e) => {
   raycaster.ray.intersectPlane(planeZ, worldPos);
   createSpark(worldPos);
 });
+
+let speedDisplay = 1200; // Initial displayed speed
+function updateSpeedDisplay(speed) {
+  // speed: km/s
+  const speedBar = document.getElementById('speedBar');
+  const speedValue = document.getElementById('speedValue');
+  // Assume max speed 2000 km/s
+  const maxSpeed = 2000;
+  const barMaxWidth = 76; // svg rect width
+  const barWidth = Math.max(0, Math.min(barMaxWidth, (speed / maxSpeed) * barMaxWidth));
+  if (speedBar) speedBar.setAttribute('width', barWidth);
+  if (speedValue) speedValue.textContent = Math.round(speed);
+}
 
 function render() {
   const delta = clock.getDelta();
