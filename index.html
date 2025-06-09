@@ -31,7 +31,7 @@
     <div class="container">
       <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="index.html">
-          ShipVate
+          <img src="assets/img/all-img/logo.png" alt="logo" class="logo"> ShipVate
         </a>
         <div class="other-all-option">
           <!-- <div class="other-option m-0 d-lg-none">
@@ -276,7 +276,7 @@
   <div class="responsive-navbar offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="navbarOffcanvas">
     <div class="offcanvas-header">
       <a class="logo d-inline-block" href="index.html">
-        ShipVate
+        <img src="assets/img/all-img/logo.png" alt="logo" class="logo"> ShipVate
       </a>
       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
@@ -942,12 +942,12 @@
   <!-- End Goal Section -->
 
   <!-- Start Team Section -->
-  <div class="team-section pb-100" id="team">
+  <div class="team-section pb-100">
     <div class="container">
       <div class="row">
         <div class="col-xl-5 col-md-6 col-lg-12">
           <div class="team-content" data-aos="fade-up" data-aos-delay="100">
-            <div class="sub-title-2">
+            <div class="sub-title-2" id="team">
               <p>Our Team</p>
             </div>
             <h2>ShipVate 專家團隊</h2>
@@ -1317,12 +1317,12 @@
   <!-- End Blog Section -->
 
   <!-- Start Contact Section Title -->
-  <div class="contact-section-title ptb-70" id="contact">
+  <div class="contact-section-title ptb-70">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-5">
           <div class="contact-content" data-aos="fade-up" data-aos-delay="100">
-            <div class="sub-title-2">
+            <div class="sub-title-2" id="contact">
               <p>Contact Us</p>
             </div>
             <h2>聯絡我們</h2>
@@ -1492,8 +1492,20 @@
             "three/addons/": "../jsm/"
         }
     }
-  </script>
+    </script>
   <script type="module" src="assets/js/main3d.js"></script>
+
+  <script>
+    document.querySelectorAll('.offcanvas .accordion-link, .offcanvas .accordion-button').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var offcanvas = document.querySelector('.offcanvas.show');
+        if (offcanvas) {
+          var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+          if (bsOffcanvas) bsOffcanvas.hide();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
