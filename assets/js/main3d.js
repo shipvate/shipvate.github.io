@@ -671,6 +671,7 @@ function setupCanvasVisibilityPause() {
       entries.forEach(entry => {
         // Skip if layout not ready
         if (entry.boundingClientRect.height === 0 || entry.boundingClientRect.width === 0) return;
+        if (!renderer) return;
         // Only resume if intersectionRatio > 0.2
         if (entry.isIntersecting && entry.intersectionRatio > 0.2) {
           if (animationPaused === false) return;
@@ -687,6 +688,7 @@ function setupCanvasVisibilityPause() {
   } else {
     // Fallback: scroll event (older browsers)
     window.addEventListener('scroll', () => {
+      if (!renderer) return;
       const rect = container.getBoundingClientRect();
       const inView = rect.bottom > 0 && rect.top < window.innerHeight;
       if (inView) {
