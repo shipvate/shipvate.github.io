@@ -401,4 +401,27 @@
 */
 	$('select').niceSelect();
 
+/*
+-----------------------------------------------------
+    Smooth Anchor Scroll for #team and #contact
+-----------------------------------------------------
+*/
+$(function() {
+    function getHeaderOffset() {
+        var header = document.querySelector('.navbar-area.sticky') || document.querySelector('.navbar-area');
+        return header ? header.offsetHeight : 0;
+    }
+    $(document).on('click', 'a[href="#team"], a[href="#contact"]', function(e) {
+        var targetId = $(this).attr('href').replace('#', '');
+        var $target = $('#' + targetId);
+        if ($target.length) {
+            e.preventDefault();
+            var headerOffset = getHeaderOffset();
+            var elementPosition = $target.offset().top;
+            var offsetPosition = elementPosition - headerOffset;
+            $('html, body').animate({ scrollTop: offsetPosition }, 500);
+        }
+    });
+});
+
 }(jQuery));

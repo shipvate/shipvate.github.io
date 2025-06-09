@@ -80,6 +80,10 @@ body {
   font-family: var(--fontFamily);
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 .container-fluid{
   max-width: 1560px;
 }
@@ -3483,7 +3487,7 @@ Services Details Area CSS
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-right: -25px;
   margin-left: -25px;
   margin-bottom: 80px;
@@ -4191,6 +4195,7 @@ Checkout Area CSS
 .order-details .payment-box .default-btn i {
   margin-right: 8px;
 }
+
 /*================================================
 Products Details Area CSS
 =================================================*/
