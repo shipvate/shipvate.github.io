@@ -1069,3 +1069,32 @@ if (boostBtn) {
     boostBtn.style.color = '#0a1428';
   });
 }
+
+const btn = document.getElementById('boostBtnMobile');
+if (btn) {
+  btn.addEventListener('touchstart', function() {
+    btn.style.boxShadow = '0 0 32px #00ffd0cc, 0 0 0 4px #00ffd044 inset';
+    btn.style.background = 'linear-gradient(135deg, #00eaff 60%, #00ffd0 100%)';
+    btn.style.color = '#0a1428';
+  }, { passive: false });
+  btn.addEventListener('touchend', function() {
+    btn.style.boxShadow = '0 0 18px #00eaff99, 0 0 0 2px #00eaff44 inset';
+    btn.style.background = 'linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%)';
+    btn.style.color = '#00eaff';
+  });
+  btn.addEventListener('touchcancel', function() {
+    btn.style.boxShadow = '0 0 18px #00eaff99, 0 0 0 2px #00eaff44 inset';
+    btn.style.background = 'linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%)';
+    btn.style.color = '#00eaff';
+  });
+  btn.addEventListener('mouseover', function() {
+    btn.style.boxShadow = '0 0 32px #00ffd0cc, 0 0 0 4px #00ffd044 inset';
+    btn.style.background = 'linear-gradient(135deg, #00eaff 60%, #00ffd0 100%)';
+    btn.style.color = '#0a1428';
+  });
+  btn.addEventListener('mouseleave', function() {
+    btn.style.boxShadow = '0 0 18px #00eaff99, 0 0 0 2px #00eaff44 inset';
+    btn.style.background = 'linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%)';
+    btn.style.color = '#00eaff';
+  });
+}
