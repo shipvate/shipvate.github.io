@@ -96,8 +96,8 @@ const config = {
     yRange: 18,
     zBase: 0,
     diskRadius: 9,
-    lengthMin: 30,
-    lengthMax: 50,
+    lengthMin: 10,
+    lengthMax: 30,
     tailOffset: -75,
   },
   spark: {
@@ -139,7 +139,7 @@ let spaceshipDir = new THREE.Vector3(0, 0, -1); // Default direction for spacesh
 let flameParticles = null;
 let flameGeometry = null;
 let flameMaterial = null;
-const flameCount = config.flame.count; // Significantly increased flame particle count
+let flameCount = config.flame.count; // Significantly increased flame particle count
 
 let meteorMeshes = [];
 let meteorGroup = null;
@@ -572,11 +572,14 @@ function updateSpeedDisplay(speed) {
   // speed: km/s
   const speedBar = document.getElementById('speedBar');
   const speedValue = document.getElementById('speedValue');
-  // Assume max speed 2000 km/s
-  const maxSpeed = 2000;
+  // max speed 99999 km/s
+  const maxSpeed = 99999;
   const barMaxWidth = 76; // svg rect width
   const barWidth = Math.max(0, Math.min(barMaxWidth, (speed / maxSpeed) * barMaxWidth));
-  if (speedBar) speedBar.setAttribute('width', barWidth);
+  if (speedBar) {
+    if (speed == maxSpeed) speedBar.setAttribute('width', barMaxWidth+12);
+    else speedBar.setAttribute('width', barWidth);
+  }
   if (speedValue) speedValue.textContent = Math.round(speed);
 }
 
@@ -592,14 +595,19 @@ function render() {
     animateMeteors(delta, clock.getElapsedTime());
   }
   // --- Flame particle animation ---
-  if (flameParticles && spaceship) {
-    // Spaceship auto sway
+  if (flameParticles && spaceship && !isBoosting) {
+    // Added: pause sway when boosting
     const t = clock.getElapsedTime();
-    spaceship.rotation.z = Math.sin(t * config.spaceship.sway.speedZ) * config.spaceship.sway.z;
-    spaceship.rotation.x = Math.sin(t * config.spaceship.sway.speedX) * config.spaceship.sway.x;
+    if (!isSwayPaused) {
+      spaceship.rotation.z = Math.sin(t * config.spaceship.sway.speedZ) * config.spaceship.sway.z;
+      spaceship.rotation.x = Math.sin(t * config.spaceship.sway.speedX) * config.spaceship.sway.x;
+    } else {
+      spaceship.rotation.z = 0;
+      spaceship.rotation.x = 0;
+    }
     // Spaceship slow glow/flicker
-    const maxGlow = config.spaceship.flicker.max; // Maximum brightness (adjustable)
-    const minGlow = config.spaceship.flicker.min; // Minimum brightness (adjustable)
+    const maxGlow = config.spaceship.flicker.max;
+    const minGlow = config.spaceship.flicker.min;
     spaceship.traverse(obj => {
       if (obj.isMesh && obj.material && obj.material.emissiveIntensity !== undefined) {
         obj.material.emissiveIntensity = minGlow + (maxGlow - minGlow) * (0.5 + 0.5 * Math.sin(t * config.spaceship.flicker.speed));
@@ -659,6 +667,29 @@ function render() {
       spark.sprite.scale.set(radius, radius, 1);
       spark.sprite.material.opacity = config.spark.maxOpacity * (1 - k);
     }
+  }
+  // Added: pause SPEED animation
+  if (!isSpeedPaused) {
+    // Gradually update speed
+    let targetSpeed = 40000 + Math.random() * 80000; // 40000~120000 km/s, average about 70000
+    speedDisplay += (targetSpeed - speedDisplay) * Math.min(1, delta * 3.5); // Increased smoothing factor
+    updateSpeedDisplay(speedDisplay);
+  } else {
+    // Force display 99999
+    updateSpeedDisplay(99999);
+  }
+  // Added: spaceship Z-axis smooth animation
+  if (spaceship) {
+    if (typeof spaceshipTargetZ === 'number') {
+      // Ease to target Z
+      spaceship.position.z += (spaceshipTargetZ - spaceship.position.z) * Math.min(1, delta * 6);
+    }
+  }
+  // --- Capsule flame animation (boost only) ---
+  if (isBoosting && spaceship) {
+    showCapsuleFlame();
+  } else {
+    hideCapsuleFlame();
   }
   postProcessing.render();
 }
@@ -753,3 +784,255 @@ function autoMobilePerformanceTuning() {
   }
 }
 autoMobilePerformanceTuning();
+
+// --- Boost (Jet Acceleration) Button Function ---
+let isBoosting = false;
+let meteorSpeedBackup = null;
+const BOOST_SPEED_FACTOR = 5; // Meteor speed boost multiplier
+const BOOST_FLAME_FACTOR = 4; // Flame density and length boost multiplier
+let flameCountBackup = null;
+let flameLengthBackup = null;
+let isSwayPaused = false; // Added: Control spaceship sway
+let isSpeedPaused = false; // Added: Control SPEED animation
+let spaceshipTargetZ = 0; // Target Z position
+let spaceshipOriginZ = 0; // Original Z position
+let spaceshipBoostZ = -40; // Z position when boosting forward
+let bloomOriginStrength = config.bloom.strength;
+let bloomBoostStrength = bloomOriginStrength * 2.2; // Stronger bloom when boosting
+
+window.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('boostBtn');
+  if (btn) {
+    // On press: start boost
+    btn.addEventListener('mousedown', () => {
+      if (isBoosting) return;
+      isBoosting = true;
+      // Backup original speed
+      if (!meteorSpeedBackup) {
+        meteorSpeedBackup = {
+          speedMin: config.meteor.speedMin,
+          speedMax: config.meteor.speedMax
+        };
+      }
+      // Backup flame parameters
+      if (!flameCountBackup) {
+        flameCountBackup = config.flame.count;
+      }
+      if (!flameLengthBackup) {
+        flameLengthBackup = {
+          lengthMin: config.flame.lengthMin,
+          lengthMax: config.flame.lengthMax
+        };
+      }
+      // Increase speed
+      config.meteor.speedMin = meteorSpeedBackup.speedMin * BOOST_SPEED_FACTOR;
+      config.meteor.speedMax = meteorSpeedBackup.speedMax * BOOST_SPEED_FACTOR;
+      // Increase flame density and length
+      config.flame.count = Math.floor(flameCountBackup * BOOST_FLAME_FACTOR);
+      config.flame.lengthMin = Math.floor(flameLengthBackup.lengthMin * BOOST_FLAME_FACTOR);
+      config.flame.lengthMax = Math.floor(flameLengthBackup.lengthMax * BOOST_FLAME_FACTOR);
+      // Immediately update speed in meteorInfos
+      for (let i = 0; i < meteorInfos.length; i++) {
+        meteorInfos[i].speed = config.meteor.speedMin + Math.random() * (config.meteor.speedMax - config.meteor.speedMin);
+      }
+      // Regenerate flame particles
+      if (flameParticles && spaceship) {
+        scene.remove(flameParticles);
+        flameParticles.visible = false;
+        hideCapsuleFlame();
+      }
+      showCapsuleFlame();
+      // Added: Spaceship moves forward
+      if (spaceship) {
+        spaceshipOriginZ = spaceship.position.z;
+        spaceshipTargetZ = spaceshipBoostZ;
+      }
+      // Added: Stronger bloom blur
+      if (postProcessing && postProcessing.outputNode && postProcessing.outputNode.children) {
+        postProcessing.outputNode.children.forEach(pass => {
+          if (pass.constructor && pass.constructor.name === 'BloomNode') {
+            pass.strength = bloomBoostStrength;
+          }
+        });
+      }
+      // Added: SPEED value jumps to 2000 and animation pauses
+      isSpeedPaused = true;
+      updateSpeedDisplay(2000);
+      // Added: Spaceship stops swaying
+      isSwayPaused = true;
+      if (spaceship) {
+        spaceship.rotation.x = 0;
+        spaceship.rotation.z = 0;
+      }
+      // Button animation effect
+      btn.classList.add('boosting');
+    });
+    // On release: restore
+    const stopBoost = () => {
+      if (!isBoosting) return;
+      if (meteorSpeedBackup) {
+        config.meteor.speedMin = meteorSpeedBackup.speedMin;
+        config.meteor.speedMax = meteorSpeedBackup.speedMax;
+        for (let i = 0; i < meteorInfos.length; i++) {
+          meteorInfos[i].speed = config.meteor.speedMin + Math.random() * (config.meteor.speedMax - config.meteor.speedMin);
+        }
+      }
+      if (flameCountBackup) {
+        config.flame.count = flameCountBackup;
+      }
+      if (flameLengthBackup) {
+        config.flame.lengthMin = flameLengthBackup.lengthMin;
+        config.flame.lengthMax = flameLengthBackup.lengthMax;
+      }
+      // Regenerate flame particles (on restore)
+      if (flameParticles && spaceship) {
+        scene.remove(flameParticles);
+        flameParticles.visible = false;
+        hideCapsuleFlame();
+      }
+      // Show particle flame
+      if (flameParticles && spaceship) {
+        scene.add(flameParticles);
+        flameParticles.visible = true;
+      }
+      // Added: Spaceship returns to original position
+      if (spaceship) {
+        spaceshipTargetZ = spaceshipOriginZ;
+      }
+      // Added: Restore bloom
+      if (postProcessing && postProcessing.outputNode && postProcessing.outputNode.children) {
+        postProcessing.outputNode.children.forEach(pass => {
+          if (pass.constructor && pass.constructor.name === 'BloomNode') {
+            pass.strength = bloomOriginStrength;
+          }
+        });
+      }
+      // Added: Resume SPEED animation
+      isSpeedPaused = false;
+      // Added: Resume spaceship sway
+      isSwayPaused = false;
+      isBoosting = false;
+      // Restore button animation effect
+      btn.classList.remove('boosting');
+    };
+    btn.addEventListener('mouseup', stopBoost);
+    btn.addEventListener('mouseleave', stopBoost);
+    // If mouse is released outside, also restore
+    document.addEventListener('mouseup', stopBoost);
+    // Mobile touch support
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (isBoosting) return;
+      isBoosting = true;
+      if (!meteorSpeedBackup) {
+        meteorSpeedBackup = {
+          speedMin: config.meteor.speedMin,
+          speedMax: config.meteor.speedMax
+        };
+      }
+      if (!flameCountBackup) {
+        flameCountBackup = config.flame.count;
+      }
+      if (!flameLengthBackup) {
+        flameLengthBackup = {
+          lengthMin: config.flame.lengthMin,
+          lengthMax: config.flame.lengthMax
+        };
+      }
+      config.meteor.speedMin = meteorSpeedBackup.speedMin * BOOST_SPEED_FACTOR;
+      config.meteor.speedMax = meteorSpeedBackup.speedMax * BOOST_SPEED_FACTOR;
+      config.flame.count = Math.floor(flameCountBackup * BOOST_FLAME_FACTOR);
+      config.flame.lengthMin = Math.floor(flameLengthBackup.lengthMin * BOOST_FLAME_FACTOR);
+      config.flame.lengthMax = Math.floor(flameLengthBackup.lengthMax * BOOST_FLAME_FACTOR);
+      for (let i = 0; i < meteorInfos.length; i++) {
+        meteorInfos[i].speed = config.meteor.speedMin + Math.random() * (config.meteor.speedMax - config.meteor.speedMin);
+      }
+      if (flameParticles && spaceship) {
+        scene.remove(flameParticles);
+        flameParticles.visible = false;
+        hideCapsuleFlame();
+      }
+      showCapsuleFlame();
+      // Added: Spaceship moves forward
+      if (spaceship) {
+        spaceshipOriginZ = spaceship.position.z;
+        spaceshipTargetZ = spaceshipBoostZ;
+      }
+      // Added: Stronger bloom blur
+      if (postProcessing && postProcessing.outputNode && postProcessing.outputNode.children) {
+        postProcessing.outputNode.children.forEach(pass => {
+          if (pass.constructor && pass.constructor.name === 'BloomNode') {
+            pass.strength = bloomBoostStrength;
+          }
+        });
+      }
+      // Added: SPEED value jumps to 2000 and animation pauses
+      isSpeedPaused = true;
+      updateSpeedDisplay(2000);
+      // Added: Spaceship stops swaying
+      isSwayPaused = true;
+      if (spaceship) {
+        spaceship.rotation.x = 0;
+        spaceship.rotation.z = 0;
+      }
+      btn.classList.add('boosting');
+    }, { passive: false });
+    btn.addEventListener('touchend', stopBoost);
+    btn.addEventListener('touchcancel', stopBoost);
+  }
+});
+
+// --- Boost Capsule Flame ---
+let capsuleFlame = null;
+let capsuleFlameMaterial = null;
+let capsuleFlameColor = new THREE.Color(0x3bbcff); // Blue color when boosting
+let capsuleFlameLength = 120; // Adjustable
+let capsuleFlameRadius = 7; // Adjustable
+
+function showCapsuleFlame() {
+  if (!spaceship) return;
+  if (!capsuleFlameMaterial) {
+    capsuleFlameMaterial = new THREE.MeshPhysicalMaterial({
+      color: capsuleFlameColor,
+      emissive: capsuleFlameColor,
+      emissiveIntensity: 2.5,
+      roughness: 0.25,
+      metalness: 0.7,
+      transparent: true,
+      opacity: 0.85,
+      transmission: 0.7,
+      thickness: 0.8,
+      clearcoat: 0.7,
+      clearcoatRoughness: 0.2,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+  }
+  if (!capsuleFlame) {
+    capsuleFlame = new THREE.Mesh(
+      new THREE.CapsuleGeometry(capsuleFlameRadius, capsuleFlameLength, 8, 16),
+      capsuleFlameMaterial
+    );
+    capsuleFlame.visible = false;
+    scene.add(capsuleFlame);
+  }
+  capsuleFlame.visible = true;
+  // Dynamic position and direction
+  const t = clock.getElapsedTime();
+  // Tail emission point
+  spaceship.localToWorld(tmpVec1.set(0, 0, 0));
+  tmpVec2.set(0, 0, -1).applyQuaternion(spaceship.quaternion).normalize();
+  const tailOffset = config.flame.tailOffset;
+  tmpVec3.copy(tmpVec1).add(tmpVec2.clone().multiplyScalar(tailOffset - capsuleFlameLength * 0.5));
+  capsuleFlame.position.copy(tmpVec3);
+  capsuleFlame.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), tmpVec2);
+  // Dynamic scale/flicker
+  // const flicker = 1 + getFlameSin(t * 8) * 0.12;
+  // capsuleFlame.scale.set(1, flicker, 1);
+  capsuleFlame.scale.set(1, 1, 1); // Fixed, no stretch
+}
+
+function hideCapsuleFlame() {
+  if (capsuleFlame) capsuleFlame.visible = false;
+}
