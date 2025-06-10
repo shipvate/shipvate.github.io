@@ -6194,3 +6194,31 @@ Go Top CSS
     display: none !important;
   }
 }
+
+@media (max-width: 767px) {
+  .boost-mobile-btn {
+    /* display: block; */
+    width: 75px;
+    margin: 18px auto 0 auto;
+    padding: 8px 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2em;
+    color: #00eaff;
+    background: linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%);
+    border: 2.5px solid #00eaff;
+    border-radius: 18px;
+    box-shadow: 0 0 18px #00eaff99, 0 0 0 2px #00eaff44 inset;
+    letter-spacing: 2.5px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(.4,2,.6,1);
+    outline: none;
+    text-shadow: 0 0 8px #00eaffcc;
+    z-index: 9999;
+  }
+}
+
+@media (min-width: 768px) {
+  .boost-mobile-btn {
+    display: none !important;
+  }
+}
