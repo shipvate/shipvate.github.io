@@ -326,7 +326,7 @@ async function init() {
           info.cooldown = config.meteor.cooldown;
           hitTimes++;
           const hitDom = document.getElementById('hitTimes');
-          if (hitDom) hitDom.textContent = hitTimes;
+          if (hitDom) hitDom.textContent = hitTimes <= 999 ? hitTimes : '∞';
         }
       }
       // Cooldown countdown
