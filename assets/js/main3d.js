@@ -682,7 +682,16 @@ function render() {
   if (spaceship) {
     if (typeof spaceshipTargetZ === 'number') {
       // Ease to target Z
-      spaceship.position.z += (spaceshipTargetZ - spaceship.position.z) * Math.min(1, delta * 6);
+      const diff = spaceshipTargetZ - spaceship.position.z;
+      if (Math.abs(diff) > 0.1) {
+        spaceship.position.z += diff * Math.min(1, delta * 6);
+      } else {
+        spaceship.position.z = spaceshipTargetZ;
+        // Reset target Z when reached
+        if (spaceshipTargetZ === spaceshipOriginZ && !isBoosting) {
+          spaceshipTargetZ = null;
+        }
+      }
     }
   }
   // --- Capsule flame animation (boost only) ---
@@ -794,7 +803,7 @@ let flameCountBackup = null;
 let flameLengthBackup = null;
 let isSwayPaused = false; // Added: Control spaceship sway
 let isSpeedPaused = false; // Added: Control SPEED animation
-let spaceshipTargetZ = 0; // Target Z position
+let spaceshipTargetZ = null; // Target Z position (null represents no boost)
 let spaceshipOriginZ = 0; // Original Z position
 let spaceshipBoostZ = -40; // Z position when boosting forward
 let bloomOriginStrength = config.bloom.strength;
