@@ -429,46 +429,54 @@ async function init() {
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
-  controls.enableZoom = false; // Disable default zoom
-  controls.minDistance = config.camera.minZ;
-  controls.maxDistance = config.camera.maxZ;
+
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
+  if (isMobile) {
+    controls.enableZoom = true;
+    controls.minDistance = config.camera.minZ;
+    controls.maxDistance = config.camera.maxZ;
+  } else {
+    controls.enableZoom = false;
+  }
   controls.target.set(0, 0.5, 0); // Target slightly upward
   controls.update();
 
-  // Custom mouse wheel zoom in/out
-  // Add raycaster and mouse coordinates
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  let mouseOnSpaceship = false;
-  // Detect if mouse is over the spaceship
-  container.addEventListener('mousemove', (e) => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    if (spaceship) {
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(spaceship, true);
-      mouseOnSpaceship = intersects.length > 0;
-    } else {
-      mouseOnSpaceship = false;
-    }
-  });
-  container.addEventListener('wheel', (e) => {
-    if (!mouseOnSpaceship) return; // Only zoom when mouse is over the spaceship
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 1 : -1;
-    let newZ = camera.position.distanceTo(controls.target) + delta * 30; // Calculate by distance
-    newZ = Math.max(config.camera.minZ, Math.min(config.camera.maxZ, newZ));
-    if (spaceship) {
-      const shipWorld = new THREE.Vector3();
-      spaceship.getWorldPosition(shipWorld);
-      const camDir = camera.position.clone().sub(controls.target).normalize();
-      camera.position.copy(shipWorld.clone().add(camDir.multiplyScalar(newZ)));
-      controls.target.copy(shipWorld);
-    } else {
-      camera.position.z = newZ;
-    }
-  }, { passive: false });
+  if (isMobile) {
+    let lastTouchDist = null;
+    container.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+      }
+    }, { passive: false });
+    container.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2 && lastTouchDist !== null) {
+        e.preventDefault();
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const newDist = Math.sqrt(dx * dx + dy * dy);
+        const delta = newDist - lastTouchDist;
+        let camDist = camera.position.distanceTo(controls.target);
+        camDist -= delta * 0.6;
+        camDist = Math.max(config.camera.minZ, Math.min(config.camera.maxZ, camDist));
+
+        if (spaceship) {
+          const shipWorld = new THREE.Vector3();
+          spaceship.getWorldPosition(shipWorld);
+          const camDir = camera.position.clone().sub(controls.target).normalize();
+          camera.position.copy(shipWorld.clone().add(camDir.multiplyScalar(camDist)));
+          controls.target.copy(shipWorld);
+        } else {
+          camera.position.z = camDist;
+        }
+        lastTouchDist = newDist;
+      }
+    }, { passive: false });
+    container.addEventListener('touchend', function(e) {
+      if (e.touches.length < 2) lastTouchDist = null;
+    });
+  }
 
   const scenePass = pass(scene, camera);
   scenePass.setMRT(mrt({ output, emissive }));
