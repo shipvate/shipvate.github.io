@@ -6198,8 +6198,8 @@ Go Top CSS
 @media (max-width: 767px) {
   .boost-mobile-btn {
     width: 75px;
-    margin: 18px auto 0 auto;
-    padding: 8px 0;
+    margin: 0px auto 0 auto;
+    padding: 7px 0;
     font-family: 'Orbitron', monospace;
     font-size: 1.2em;
     color: #00eaff;
