@@ -1565,6 +1565,42 @@
       });
     });
   </script>
+  <script>
+    (function() {
+      function triggerBoostEvent(type) {
+        var btnDesktop = document.getElementById('boostBtn');
+        if (btnDesktop) {
+          btnDesktop.dispatchEvent(new Event(type, {bubbles:true,cancelable:true}));
+        }
+      }
+      function setupMobileBoostBtn() {
+        var btnMobile = document.getElementById('boostBtnMobile');
+        if (!btnMobile) return;
+        btnMobile.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          triggerBoostEvent('mousedown');
+        }, { passive: false });
+        btnMobile.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          triggerBoostEvent('mouseup');
+        });
+        btnMobile.addEventListener('touchcancel', function(e) {
+          e.preventDefault();
+          triggerBoostEvent('mouseup');
+        });
+        btnMobile.addEventListener('click', function(e) {
+          e.preventDefault();
+          triggerBoostEvent('mousedown');
+          setTimeout(function() { triggerBoostEvent('mouseup'); }, 300);
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupMobileBoostBtn);
+      } else {
+        setupMobileBoostBtn();
+      }
+    })();
+  </script>
 </body>
 
 </html>
