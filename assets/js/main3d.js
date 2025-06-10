@@ -77,7 +77,7 @@ const config = {
   spaceship: {
     scale: 0.01,
     rotation: { x: 0, y: 75, z: 0 },
-    positionY: -10,
+    positionY: 20,
     emissive: 0xffffff,
     emissiveIntensity: 0.7,
     roughness: 0.7,
