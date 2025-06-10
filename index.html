@@ -646,10 +646,23 @@
           <span style="font-size: 16px; color: #00eaff; letter-spacing: 2.5px; font-family: 'Orbitron', monospace; text-shadow: 0 0 8px #00eaff99;">BOOST</span>
           <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
             <div style="display: flex; align-items: baseline; margin-top:2px;">
-              <button id="boostBtn" class="boost-btn-dashboard2" title="Boost!">
-                <span class="boost-btn-dash2-border"></span>
-                <span class="boost-btn-dash2-bg"></span>
-                <span class="boost-btn-dash2-text"></span>
+              <button id="boostBtn" style="
+                min-width: 92px;
+                padding: 6px 22px;
+                font-family: 'Orbitron', monospace;
+                font-size: 1.1em;
+                color: #00eaff;
+                background: linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%);
+                border: 2px solid #00eaff;
+                border-radius: 12px;
+                box-shadow: 0 0 16px #00eaff99, 0 0 0 2px #00eaff44 inset;
+                letter-spacing: 2px;
+                cursor: pointer;
+                transition: all 0.18s cubic-bezier(.4,2,.6,1);
+                outline: none;
+                text-shadow: 0 0 8px #00eaffcc;
+              ">
+                <i class="bx bx-bolt-circle" style="font-size: 1.4em; vertical-align: middle;"></i>
               </button>
             </div>
           </div>
@@ -1359,7 +1372,7 @@
 
   <!-- Start Contact Section Title -->
   <div class="contact-section-title ptb-70">
-    <div class="container">
+       <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-5">
           <div class="contact-content" data-aos="fade-up" data-aos-delay="100">

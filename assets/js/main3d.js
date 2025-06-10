@@ -1036,3 +1036,27 @@ function showCapsuleFlame() {
 function hideCapsuleFlame() {
   if (capsuleFlame) capsuleFlame.visible = false;
 }
+
+const boostBtn = document.getElementById('boostBtn');
+if (boostBtn) {
+  boostBtn.addEventListener('mousedown', function() {
+    boostBtn.style.boxShadow = '0 0 32px #00ffd0cc, 0 0 0 4px #00ffd044 inset';
+    boostBtn.style.background = 'linear-gradient(135deg, #00eaff 60%, #00ffd0 100%)';
+    boostBtn.style.color = '#0a1428';
+  });
+  boostBtn.addEventListener('mouseup', function() {
+    boostBtn.style.boxShadow = '0 0 16px #00eaff99, 0 0 0 2px #00eaff44 inset';
+    boostBtn.style.background = 'linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%)';
+    boostBtn.style.color = '#00eaff';
+  });
+  boostBtn.addEventListener('mouseleave', function() {
+    boostBtn.style.boxShadow = '0 0 16px #00eaff99, 0 0 0 2px #00eaff44 inset';
+    boostBtn.style.background = 'linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%)';
+    boostBtn.style.color = '#00eaff';
+  });
+  boostBtn.addEventListener('mouseover', function() {
+    boostBtn.style.boxShadow = '0 0 32px #00ffd0cc, 0 0 0 4px #00ffd044 inset';
+    boostBtn.style.background = 'linear-gradient(135deg, #00eaff 60%, #00ffd0 100%)';
+    boostBtn.style.color = '#0a1428';
+  });
+}
