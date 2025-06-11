@@ -15,7 +15,7 @@ const config = {
     near: 0.2,
     far: 3000,
     position: { x: 0, y: 30, z: 90 },
-    minZ: 320,
+    minZ: 420,
     maxZ: 700,
   },
   ambientLight: {
@@ -77,7 +77,8 @@ const config = {
   spaceship: {
     scale: 0.01,
     rotation: { x: 0, y: 75, z: 0 },
-    positionY: 20,
+    positionX: 25,
+    positionY: 35,
     emissive: 0xffffff,
     emissiveIntensity: 0.7,
     roughness: 0.7,
@@ -125,6 +126,46 @@ const config = {
   },
 };
 
+// --- Detect if device is mobile ---
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent) || window.innerWidth <= 600;
+}
+
+// --- Mobile-only scaling function ---
+function autoScaleConfigForMobile(container) {
+  // You can adjust the base resolution for mobile
+  const BASE_WIDTH = 750;
+  const BASE_HEIGHT = 600;
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  const scaleX = BASE_WIDTH / width;
+  const scaleY = BASE_HEIGHT / height;
+  // On mobile, spaceship is larger, camera is closer, Y axis is lower
+  config.spaceship.positionX = 10 * scaleX;
+  config.spaceship.positionY = 18 * scaleY;
+  config.camera.minZ = 210 * scaleX;
+  config.camera.maxZ = 320 * scaleX;
+}
+
+// --- Dynamically scale parameters (auto switch desktop/mobile) ---
+function autoScaleConfigForResolution(container) {
+  if (isMobileDevice()) {
+    autoScaleConfigForMobile(container);
+    return;
+  }
+  const BASE_WIDTH = 1000;
+  const BASE_HEIGHT = 500;
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  const scaleX = BASE_WIDTH / width;
+  const scaleY = BASE_HEIGHT / height;
+  // Desktop: the larger the screen, the smaller the scale, the closer the camera
+  config.spaceship.positionX = 35 * scaleX;
+  config.spaceship.positionY = 35 * scaleY;
+  config.camera.minZ = 420 * scaleX;
+  config.camera.maxZ = 700 * scaleX;
+}
+
 let camera, scene, renderer;
 let postProcessing;
 let mixer;
@@ -152,6 +193,9 @@ async function init() {
   const container = document.querySelector('.canvas3D');
   // Safety: remove old canvas to avoid duplicate append or canvas misplacement
   container.querySelectorAll('canvas').forEach(c => c.remove());
+
+  // --- New: auto scaling ---
+  autoScaleConfigForResolution(container);
 
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -383,6 +427,7 @@ async function init() {
     });
     gltf.scene.scale.set(config.spaceship.scale, config.spaceship.scale, config.spaceship.scale);
     gltf.scene.rotation.set(config.spaceship.rotation.x, config.spaceship.rotation.y, config.spaceship.rotation.z);
+    gltf.scene.position.x = config.spaceship.positionX;
     gltf.scene.position.y = config.spaceship.positionY;
     scene.add(gltf.scene);
     spaceship = gltf.scene;
@@ -483,6 +528,8 @@ async function init() {
 }
 
 function onWindowResize() {
+  const container = document.querySelector('.canvas3D');
+  if (container) autoScaleConfigForResolution(container);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
