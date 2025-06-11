@@ -1135,7 +1135,7 @@ Features Area 2 CSS
 .features-section-2 .feature-box{
   background: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(3.5px);
-  padding: 75px 30px 35px;
+  padding: 50px 20px 20px;
   position: relative;
   border: 1px solid #101c37;
   margin-bottom: 30px;
@@ -1207,7 +1207,7 @@ Features Area 2 CSS
 
 .features-section-2 .feature-box p {
   color: var(--paragraphColorSecond);
-  font-size: 17px;
+  font-size: 16px;
 }
 
 /*================================================

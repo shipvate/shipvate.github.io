@@ -623,8 +623,13 @@
       <div id="dashboard-inner" style="display: flex; flex-direction: column; align-items: flex-end; gap: 22px;">
         <div style="display: flex; align-items: center; gap: 18px;">
           <span style="font-size: 16px; color: #00eaff; letter-spacing: 2.5px; font-family: 'Orbitron', monospace; text-shadow: 0 0 8px #00eaff99;">HITS #</span>
-          <div style="width: 84px; height: 84px; background: linear-gradient(135deg, rgba(0,234,255,0.18) 60%, rgba(10,20,40,0.92) 100%); border: 2.5px solid #00eaff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px #00eaff77, 0 0 0 4px #00eaff22 inset;">
-            <span id="hitTimes" style="font-size: 2.5em; color: #00eaff; font-family: 'Orbitron', monospace; font-weight: bold; text-shadow: 0 0 12px #00eaffcc; letter-spacing: 1.5px;">0</span>
+          <div style="position:relative; width:84px; height:84px; display:flex; align-items:center; justify-content:center;">
+            <svg width="84" height="84">
+              <circle cx="42" cy="42" r="36" stroke="#122b3a" stroke-width="8" fill="none"/>
+              <circle id="hitsCircle" cx="42" cy="42" r="36" stroke="#00eaff" stroke-width="8" fill="none"
+                style="stroke-linecap:round; stroke-dasharray:226.1946710584651; stroke-dashoffset:226.1946710584651; transition:stroke-dashoffset 0.4s cubic-bezier(.4,2,.6,1); filter:drop-shadow(0 0 12px #00ffd0cc);" />
+            </svg>
+            <span id="hitTimes" style="position:absolute; left:0; right:0; top:0; bottom:0; margin:auto; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.2em; color:#00ffd0; font-family:'Orbitron',monospace; font-weight:bold; text-shadow:0 0 12px #00eaffcc; letter-spacing:1.5px;">0</span>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 18px;">
@@ -700,15 +705,14 @@
           </h2>
         </div>
       </div>
-      </div>
       <div class="row justify-content-center align-items-center">
         <div class="col-xl-3 col-lg-6 col-sm-6">
           <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
             <span>Solution 1</span>
             <div class="icon">
-              <i class="fi fi-tr-cubes"></i>
+              <i class="fi fi-tr-globe-snow"></i>
             </div>
-            <h3>3D Virtual Model</h3>
+            <h3 style="font-size: 1.3em;">3D Virtual Model</h3>
             <p>基於 Omniverse 生成式 AI 模型，開發獨創 Ship-Generator 資料庫，輕鬆模擬工廠產業鏈及生產流程，並透過 AI 記錄數據、判斷執行效率等。</p>
           </div>
         </div>
@@ -718,7 +722,7 @@
             <div class="icon">
               <i class="fi fi-tr-bullseye-pointer"></i>
             </div>
-            <h3>AI Visual Inspection</h3>
+            <h3 style="font-size: 1.3em;">AI Visual Inspection</h3>
             <p>AI 視覺辨識擁有超越 AOI 的強大辨識力，能解決瑕疵檢測、分類與分級、計數等難題，結合技術提升生產線自動化與品質控管等效率。</p>
           </div>
         </div>
@@ -728,8 +732,18 @@
             <div class="icon">
               <i class="fi fi-tr-broadcast-tower"></i>
             </div>
-            <h3>AI Martech</h3>
+            <h3 style="font-size: 1.3em;">AI Martech</h3>
             <p>透過 NLU、NLG 及 NLP 語言模型，並加上 CV 生成模型，打造會自我深度訓練的機器人，應用於 AI 廣告投放、AI ChatBot、AI SEO 產品。</p>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-sm-6">
+          <div class="feature-box" data-aos="fade-up" data-aos-delay="500">
+            <span>Solution 4</span>
+            <div class="icon">
+              <i class="fi fi-tr-cubes"></i>
+            </div>
+            <h3 style="font-size: 1.3em;">AI MetaVerse</h3>
+            <p>運用區塊鏈與智能合約佈局 Web3，實現資產數位化 (RWA / GameFi)、加密貨幣支付 (PayFi) 與資產管理，讓應用更加智能並貼近商業場景。</p>
           </div>
         </div>
       </div>

@@ -371,6 +371,7 @@ async function init() {
           hitTimes++;
           const hitDom = document.getElementById('hitTimes');
           if (hitDom) hitDom.textContent = hitTimes <= 999 ? hitTimes : '∞';
+          updateHitsCircle(hitTimes);
         }
       }
       // Cooldown countdown
@@ -628,6 +629,17 @@ function updateSpeedDisplay(speed) {
     else speedBar.setAttribute('width', barWidth);
   }
   if (speedValue) speedValue.textContent = Math.round(speed);
+}
+
+// Update hit times circle stroke based on hit count
+function updateHitsCircle(value, max = 999) {
+  const circle = document.getElementById('hitsCircle');
+  if (!circle) return;
+  const percent = Math.min(1, value / max);
+  const radius = circle.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+  circle.style.strokeDasharray = `${circumference}`;
+  circle.style.strokeDashoffset = `${circumference * (1 - percent)}`;
 }
 
 function render() {
