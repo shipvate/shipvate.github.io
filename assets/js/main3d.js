@@ -7,6 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
+import { SVGLoader } from '../../jsm/loaders/SVGLoader.js';
 
 // --- Global Configuration ---
 const config = {
@@ -762,6 +763,246 @@ function render() {
   postProcessing.render();
 }
 
+// === ShipVate LOGO fly-in animation ===
+let logoFlyMesh = null;
+let logoFlyGlow = null;
+let logoFlyProgress = 0;
+let logoFlyAnimating = false;
+let logoFlyDuration = 2.2; // Animation duration in seconds
+
+async function startLogoFlyInAnimation() {
+  if (!spaceship) return;
+  // Remove old animated LOGO
+  if (logoFlyMesh) { scene.remove(logoFlyMesh); logoFlyMesh = null; }
+  if (logoFlyGlow) { scene.remove(logoFlyGlow); logoFlyGlow = null; }
+  logoFlyProgress = 0;
+  logoFlyAnimating = true;
+  // Load SVG
+  const loader = new SVGLoader();
+  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgData = loader.parse(svgText);
+  const shapes = [];
+  svgData.paths.forEach(path => {
+    const subShapes = SVGLoader.createShapes(path);
+    shapes.push(...subShapes);
+  });
+  const extrudeSettings = { depth: 8, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 1.5, bevelSegments: 4 };
+  const geometry = new THREE.ExtrudeGeometry(shapes, extrudeSettings);
+  // Material: exactly the same as the logo on the ship
+  const logoMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x43CEA2,
+    metalness: 0.85,
+    roughness: 0.13,
+    emissive: 0x185A9D,
+    emissiveIntensity: 0.5,
+    clearcoat: 0.7,
+    transparent: true,
+    opacity: 0.98
+  });
+  logoFlyMesh = new THREE.Mesh(geometry, logoMaterial);
+  logoFlyMesh.name = 'shipvateLogoFly';
+  logoFlyMesh.scale.set(0.18, -0.18, 0.18);
+  // Glow
+  const logoColor = 0x43CEA2;
+  const glowMaterial = new THREE.MeshPhysicalMaterial({
+    color: logoColor,
+    metalness: 0.5,
+    roughness: 0.1,
+    emissive: logoColor,
+    emissiveIntensity: 2.5,
+    transparent: true,
+    opacity: 0.10,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  logoFlyGlow = new THREE.Mesh(geometry, glowMaterial);
+  logoFlyGlow.name = 'shipvateLogoFlyGlow';
+  logoFlyGlow.scale.set(0.22, -0.22, 0.22);
+  // Initial position: 700 units in front of the spaceship (was 400)
+  const shipPos = new THREE.Vector3();
+  spaceship.getWorldPosition(shipPos);
+  const shipDir = new THREE.Vector3(0, 0, -1).applyQuaternion(spaceship.quaternion).normalize();
+  const startPos = shipPos.clone().add(shipDir.clone().multiplyScalar(700));
+  logoFlyMesh.position.copy(startPos);
+  logoFlyGlow.position.copy(startPos);
+  // Parallel to the width of the spaceship
+  logoFlyMesh.quaternion.copy(spaceship.quaternion);
+  logoFlyGlow.quaternion.copy(spaceship.quaternion);
+  scene.add(logoFlyGlow);
+  // scene.add(logoFlyMesh);
+}
+
+// Add animation update in render()
+const oldRender = render;
+render = function() {
+  // ...existing code...
+  if (logoFlyAnimating && logoFlyMesh && spaceship) {
+    logoFlyProgress += clock.getDelta() / logoFlyDuration;
+    // Let the LOGO fly from 700 in front of the spaceship, pass through the nose at 0, and continue to -200 behind
+    let t = logoFlyProgress;
+    if (t > 1.3) t = 1.3; // 1.0 = nose, 1.3 = after passing through
+    const shipPos = new THREE.Vector3();
+    spaceship.getWorldPosition(shipPos);
+    const shipDir = new THREE.Vector3(0, 0, -1).applyQuaternion(spaceship.quaternion).normalize();
+    const from = shipPos.clone().add(shipDir.clone().multiplyScalar(700));
+    const to = shipPos.clone().add(shipDir.clone().multiplyScalar(-200)); // Pass through to behind the spaceship
+    const pos = from.clone().lerp(to, t);
+    // === Fix Y axis: logo Y position automatically aligns with the spaceship nose ===
+    const bbox = new THREE.Box3().setFromObject(spaceship);
+    const noseY = bbox.max.y; // Nose height
+    pos.x = pos.x - 25;
+    pos.y = noseY + 10;
+    logoFlyMesh.position.copy(pos);
+    logoFlyGlow.position.copy(pos);
+    // scale/opacity animation
+    // 原本最大 scale = 0.18 + 0.16 * (1-t)（2倍），改為 1.5 倍：0.18 + 0.09 * (1-t)
+    let scale = 0.18 + 0.09 * (1-t); // 1.5x size
+    if (t > 1) scale = 0.18 - 0.06 * (t-1)/0.3; // shrink after passing through (1.5x)
+    logoFlyMesh.scale.set(scale, -scale, scale);
+    logoFlyGlow.scale.set(scale*1.22, -scale*1.22, scale*1.22);
+    // opacity animation
+    let opacity = 0.98 * (1-t);
+    if (t > 1) opacity = 0.98 * (1.3-t)/0.3; // fade out after passing through
+    logoFlyMesh.material.opacity = Math.max(0, opacity);
+    logoFlyGlow.material.opacity = Math.max(0, 0.10 * (1.3-t)/0.3);
+    // orientation follows the spaceship
+    logoFlyMesh.quaternion.copy(spaceship.quaternion);
+    logoFlyGlow.quaternion.copy(spaceship.quaternion);
+    if (logoFlyProgress >= 1.3) {
+      // End animation
+      scene.remove(logoFlyMesh);
+      scene.remove(logoFlyGlow);
+      logoFlyMesh = null;
+      logoFlyGlow = null;
+      logoFlyAnimating = false;
+      // === Only fade in the main LOGO after the LOGO animation ends, and change the button after fade-in ===
+      fadeInLogoOnSpaceshipTop(1.2, function() {
+        // Button style change (originally in triggerBoostEasterEgg)
+        const btn = document.querySelector('.default-btn');
+        if (btn) {
+          btn.style.background = 'linear-gradient(135deg, #43CEA2 60%, #185A9D 100%)';
+          btn.style.color = '#fff';
+          btn.style.boxShadow = '0 0 24px #FFB30099, 0 0 0 2px #FFD70044 inset';
+          btn.textContent = '立即索取 VIP 優惠折扣';
+          btn.setAttribute('href', 'mailto:patrick.lin@shipvate.com');
+          btn.setAttribute('target', '_blank');
+        }
+      });
+    }
+  }
+  oldRender();
+}
+
+// 1. Remove auto call to addLogoOnSpaceshipTop
+// tryAddLogoAfterSpaceshipLoaded();
+
+// 2. Wrap addLogoOnSpaceshipTop to support fade-in animation
+async function fadeInLogoOnSpaceshipTop(duration = 1.2, onComplete) {
+  if (!spaceship) return;
+  // First create logo but set opacity 0
+  const loader = new SVGLoader();
+  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgData = loader.parse(svgText);
+  const shapes = [];
+  svgData.paths.forEach(path => {
+    const subShapes = SVGLoader.createShapes(path);
+    shapes.push(...subShapes);
+  });
+  const extrudeSettings = { depth: 8, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 1.5, bevelSegments: 4 };
+  const geometry = new THREE.ExtrudeGeometry(shapes, extrudeSettings);
+  const material = new THREE.MeshPhysicalMaterial({
+    color: 0x43CEA2,
+    metalness: 0.85,
+    roughness: 0.13,
+    emissive: 0x185A9D,
+    emissiveIntensity: 0.5,
+    clearcoat: 0.7,
+    transparent: true,
+    opacity: 0 // start transparent
+  });
+  const logoMesh = new THREE.Mesh(geometry, material);
+  logoMesh.scale.set(0.06, 0.06, 0.06);
+  logoMesh.scale.y *= -1;
+  const bbox = new THREE.Box3().setFromObject(spaceship);
+  const center = bbox.getCenter(new THREE.Vector3());
+  const top = bbox.max.y;
+  logoMesh.position.set(center.x-30, top + 18, center.z + 53);
+  logoMesh.quaternion.copy(spaceship.quaternion);
+  scene.add(logoMesh);
+  // Fade-in animation
+  let fade = 0;
+  function fadeInStep() {
+    fade += 1/60/duration;
+    logoMesh.material.opacity = Math.min(0.98, fade * 0.98);
+    if (fade < 1) {
+      requestAnimationFrame(fadeInStep);
+    } else {
+      logoMesh.material.opacity = 0.98;
+      if (typeof onComplete === 'function') onComplete();
+    }
+  }
+  fadeInStep();
+}
+
+// Modify the call in render after LOGO animation ends
+render = function() {
+  // ...existing code...
+  if (logoFlyAnimating && logoFlyMesh && spaceship) {
+    logoFlyProgress += clock.getDelta() / logoFlyDuration;
+    // Let the LOGO fly from 700 in front of the spaceship, pass through the nose at 0, and continue to -200 behind
+    let t = logoFlyProgress;
+    if (t > 1.3) t = 1.3; // 1.0 = nose, 1.3 = after passing through
+    const shipPos = new THREE.Vector3();
+    spaceship.getWorldPosition(shipPos);
+    const shipDir = new THREE.Vector3(0, 0, -1).applyQuaternion(spaceship.quaternion).normalize();
+    const from = shipPos.clone().add(shipDir.clone().multiplyScalar(700));
+    const to = shipPos.clone().add(shipDir.clone().multiplyScalar(-200)); // Pass through to behind the spaceship
+    const pos = from.clone().lerp(to, t);
+    // === Fix Y axis: logo Y position automatically aligns with the spaceship nose ===
+    const bbox = new THREE.Box3().setFromObject(spaceship);
+    const noseY = bbox.max.y; // Nose height
+    pos.x = pos.x - 25;
+    pos.y = noseY + 50;
+    logoFlyMesh.position.copy(pos);
+    logoFlyGlow.position.copy(pos);
+    // scale/opacity animation
+    let scale = 0.18 + 0.09 * (1-t); // 1.5x size
+    if (t > 1) scale = 0.18 - 0.06 * (t-1)/0.3; // shrink after passing through (1.5x)
+    logoFlyMesh.scale.set(scale, -scale, scale);
+    logoFlyGlow.scale.set(scale*1.22, -scale*1.22, scale*1.22);
+    // opacity animation
+    let opacity = 0.98 * (1-t);
+    if (t > 1) opacity = 0.98 * (1.3-t)/0.3; // fade out after passing through
+    logoFlyMesh.material.opacity = Math.max(0, opacity);
+    logoFlyGlow.material.opacity = Math.max(0, 0.10 * (1.3-t)/0.3);
+    // orientation follows the spaceship
+    logoFlyMesh.quaternion.copy(spaceship.quaternion);
+    logoFlyGlow.quaternion.copy(spaceship.quaternion);
+    if (logoFlyProgress >= 1.3) {
+      // End animation
+      scene.remove(logoFlyMesh);
+      scene.remove(logoFlyGlow);
+      logoFlyMesh = null;
+      logoFlyGlow = null;
+      logoFlyAnimating = false;
+      // === Only fade in the main LOGO after the LOGO animation ends, and change the button after fade-in ===
+      fadeInLogoOnSpaceshipTop(1.2, function() {
+        // Button style change (originally in triggerBoostEasterEgg)
+        const btn = document.querySelector('.default-btn');
+        if (btn) {
+          btn.style.background = 'linear-gradient(135deg, #43CEA2 60%, #185A9D 100%)';
+          btn.style.color = '#fff';
+          btn.style.boxShadow = '0 0 24px #FFB30099, 0 0 0 2px #FFD70044 inset';
+          btn.textContent = '立即索取 VIP 優惠折扣';
+          btn.setAttribute('href', 'mailto:patrick.lin@shipvate.com');
+          btn.setAttribute('target', '_blank');
+        }
+      });
+    }
+  }
+  oldRender();
+}
+
 // --- Pause/Resume animation when window is not visible (save resources) ---
 let animationPaused = false;
 function onVisibilityChange() {
@@ -1138,15 +1379,9 @@ const BOOST_EASTER_EGG_TIME = 10000; // 10 seconds
 function triggerBoostEasterEgg() {
   if (boostEasterEggTriggered) return;
   boostEasterEggTriggered = true;
-  // 1. Change button to gold gradient
-  const btn = document.querySelector('.default-btn');
-  if (btn) {
-    btn.style.background = 'linear-gradient(135deg, #43CEA2 60%, #185A9D 100%)'; // Gold gradient
-    btn.style.color = '#fff';
-    btn.style.boxShadow = '0 0 24px #FFB30099, 0 0 0 2px #FFD70044 inset';
-    btn.textContent = '立即索取 VIP 優惠折扣';
-    btn.setAttribute('href', 'mailto:patrick.lin@shipvate.com');
-    btn.setAttribute('target', '_blank');
+  // Only trigger LOGO fly-in animation
+  if (typeof startLogoFlyInAnimation === 'function') {
+    startLogoFlyInAnimation();
   }
 }
 
@@ -1180,3 +1415,54 @@ if (boostBtnMain) {
     boostHoldTimer = null;
   });
 }
+
+// === Draw ShipVate Logo (SVG-accurate) on top of the spaceship ===
+async function addLogoOnSpaceshipTop() {
+  if (!spaceship) return;
+  // Load SVG file
+  const loader = new SVGLoader();
+  // Use fetch to get SVG content
+  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgData = loader.parse(svgText);
+  // Only take the first path (logo has only one main path)
+  const shapes = [];
+  svgData.paths.forEach(path => {
+    const subShapes = SVGLoader.createShapes(path);
+    shapes.push(...subShapes);
+  });
+  // Create 3D geometry
+  const extrudeSettings = { depth: 8, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 1.5, bevelSegments: 4 };
+  const geometry = new THREE.ExtrudeGeometry(shapes, extrudeSettings);
+  // Material: blue-green metallic
+  const material = new THREE.MeshPhysicalMaterial({
+    color: 0x43CEA2,
+    metalness: 0.85,
+    roughness: 0.13,
+    emissive: 0x185A9D,
+    emissiveIntensity: 0.5,
+    clearcoat: 0.7,
+    transparent: true,
+    opacity: 0.98
+  });
+  const logoMesh = new THREE.Mesh(geometry, material);
+  // Scale and center according to SVG viewBox size
+  logoMesh.scale.set(0.06, 0.06, 0.06); // Based on viewBox 400x342
+  logoMesh.scale.y *= -1; // Fix upside down
+  // Get the top position of the spaceship
+  const bbox = new THREE.Box3().setFromObject(spaceship);
+  const center = bbox.getCenter(new THREE.Vector3());
+  const top = bbox.max.y;
+  logoMesh.position.set(center.x - 30, top + 18, center.z + 33);
+  // Make the logo parallel to the width of the spaceship
+  logoMesh.quaternion.copy(spaceship.quaternion);
+  scene.add(logoMesh);
+}
+// Call after spaceship is loaded
+// function tryAddLogoAfterSpaceshipLoaded() {
+//   if (spaceship) {
+//     addLogoOnSpaceshipTop();
+//   } else {
+//     setTimeout(tryAddLogoAfterSpaceshipLoaded, 400);
+//   }
+// }
+// tryAddLogoAfterSpaceshipLoaded();
