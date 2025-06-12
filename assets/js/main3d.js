@@ -855,7 +855,6 @@ render = function() {
     logoFlyMesh.position.copy(pos);
     logoFlyGlow.position.copy(pos);
     // scale/opacity animation
-    // 原本最大 scale = 0.18 + 0.16 * (1-t)（2倍），改為 1.5 倍：0.18 + 0.09 * (1-t)
     let scale = 0.18 + 0.09 * (1-t); // 1.5x size
     if (t > 1) scale = 0.18 - 0.06 * (t-1)/0.3; // shrink after passing through (1.5x)
     logoFlyMesh.scale.set(scale, -scale, scale);
@@ -926,7 +925,7 @@ async function fadeInLogoOnSpaceshipTop(duration = 1.2, onComplete) {
   const bbox = new THREE.Box3().setFromObject(spaceship);
   const center = bbox.getCenter(new THREE.Vector3());
   const top = bbox.max.y;
-  logoMesh.position.set(center.x-30, top + 18, center.z + 53);
+  logoMesh.position.set(center.x, top + 15, center.z - 53);
   logoMesh.quaternion.copy(spaceship.quaternion);
   scene.add(logoMesh);
   // Fade-in animation
@@ -1452,7 +1451,7 @@ async function addLogoOnSpaceshipTop() {
   const bbox = new THREE.Box3().setFromObject(spaceship);
   const center = bbox.getCenter(new THREE.Vector3());
   const top = bbox.max.y;
-  logoMesh.position.set(center.x - 30, top + 18, center.z + 33);
+  logoMesh.position.set(center.x, top + 15, center.z + 33);
   // Make the logo parallel to the width of the spaceship
   logoMesh.quaternion.copy(spaceship.quaternion);
   scene.add(logoMesh);
