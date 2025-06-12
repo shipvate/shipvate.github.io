@@ -1128,3 +1128,55 @@ if (boostBtn) {
     boostBtn.style.color = '#0a1428';
   });
 }
+
+// === BOOST hold 10s Easter Egg ===
+let boostHoldTimer = null;
+let boostHoldStart = null;
+let boostEasterEggTriggered = false;
+const BOOST_EASTER_EGG_TIME = 10000; // 10 seconds
+
+function triggerBoostEasterEgg() {
+  if (boostEasterEggTriggered) return;
+  boostEasterEggTriggered = true;
+  // 1. Change button to gold gradient
+  const btn = document.querySelector('.default-btn');
+  if (btn) {
+    btn.style.background = 'linear-gradient(135deg, #43CEA2 60%, #185A9D 100%)'; // Gold gradient
+    btn.style.color = '#fff';
+    btn.style.boxShadow = '0 0 24px #FFB30099, 0 0 0 2px #FFD70044 inset';
+    btn.textContent = '立即索取 VIP 優惠折扣';
+    btn.setAttribute('href', 'mailto:patrick.lin@shipvate.com');
+    btn.setAttribute('target', '_blank');
+  }
+}
+
+const boostBtnMain = document.getElementById('boostBtn');
+if (boostBtnMain) {
+  boostBtnMain.addEventListener('mousedown', () => {
+    if (boostEasterEggTriggered) return;
+    boostHoldStart = Date.now();
+    boostHoldTimer = setTimeout(triggerBoostEasterEgg, BOOST_EASTER_EGG_TIME);
+  });
+  boostBtnMain.addEventListener('mouseup', () => {
+    clearTimeout(boostHoldTimer);
+    boostHoldTimer = null;
+  });
+  boostBtnMain.addEventListener('mouseleave', () => {
+    clearTimeout(boostHoldTimer);
+    boostHoldTimer = null;
+  });
+  // Mobile touch support
+  boostBtnMain.addEventListener('touchstart', (e) => {
+    if (boostEasterEggTriggered) return;
+    boostHoldStart = Date.now();
+    boostHoldTimer = setTimeout(triggerBoostEasterEgg, BOOST_EASTER_EGG_TIME);
+  }, { passive: false });
+  boostBtnMain.addEventListener('touchend', () => {
+    clearTimeout(boostHoldTimer);
+    boostHoldTimer = null;
+  });
+  boostBtnMain.addEventListener('touchcancel', () => {
+    clearTimeout(boostHoldTimer);
+    boostHoldTimer = null;
+  });
+}
