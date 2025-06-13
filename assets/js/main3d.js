@@ -1073,8 +1073,8 @@ function autoMobilePerformanceTuning() {
   const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
   const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
   const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 4;
-  // alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
-  // alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
+  alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
+  alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
   if (isMobile || lowCore || lowMem) {
     // Reduce particle counts
     config.star.count = 800;
