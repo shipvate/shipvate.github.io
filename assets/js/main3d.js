@@ -1071,15 +1071,15 @@ setupCanvasVisibilityPause();
 function autoMobilePerformanceTuning() {
   // Detect low-end devices
   const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
-  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
-  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 4;
-  alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
-  alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
+  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 5;
+  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 5;
+  // alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
+  // alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
   if (isMobile || lowCore || lowMem) {
     // Reduce particle counts
-    config.star.count = 800;
-    config.flame.count = 6000;
-    config.meteor.count = 80;
+    config.star.count = 600;
+    config.flame.count = 4500;
+    config.meteor.count = 60;
     // Reduce particle size
     config.star.size = 2;
     config.flame.size = 80;
