@@ -768,7 +768,7 @@ let logoFlyMesh = null;
 let logoFlyGlow = null;
 let logoFlyProgress = 0;
 let logoFlyAnimating = false;
-let logoFlyDuration = 2.2; // Animation duration in seconds
+let logoFlyDuration = 3; // Animation duration in seconds
 
 async function startLogoFlyInAnimation() {
   if (!spaceship) return;
@@ -1108,11 +1108,18 @@ let spaceshipBoostZ = -40; // Z position when boosting forward
 let bloomOriginStrength = config.bloom.strength;
 let bloomBoostStrength = bloomOriginStrength * 2.2; // Stronger bloom when boosting
 
+const easterEggAudio = new Audio('assets/sound/trigger.mp3');
+const boostAudio = new Audio('assets/sound/boost.mp3');
+
 window.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('boostBtn');
   if (btn) {
     // On press: start boost
     btn.addEventListener('mousedown', () => {
+      if (boostAudio) {
+        boostAudio.currentTime = 0;
+        boostAudio.play();
+      }
       if (isBoosting) return;
       isBoosting = true;
       // Backup original speed
@@ -1175,6 +1182,16 @@ window.addEventListener('DOMContentLoaded', () => {
       // Button animation effect
       btn.classList.add('boosting');
     });
+    const stopBoostSound = () => {
+      if (boostAudio) {
+        boostAudio.pause();
+        boostAudio.currentTime = 0;
+      }
+    };
+    btn.addEventListener('mouseup', stopBoostSound);
+    btn.addEventListener('mouseleave', stopBoostSound);
+    btn.addEventListener('touchend', stopBoostSound);
+    btn.addEventListener('touchcancel', stopBoostSound);
     // On release: restore
     const stopBoost = () => {
       if (!isBoosting) return;
@@ -1230,6 +1247,10 @@ window.addEventListener('DOMContentLoaded', () => {
     // Mobile touch support
     btn.addEventListener('touchstart', (e) => {
       e.preventDefault();
+      if (boostAudio) {
+        boostAudio.currentTime = 0;
+        boostAudio.play();
+      }
       if (isBoosting) return;
       isBoosting = true;
       if (!meteorSpeedBackup) {
@@ -1369,15 +1390,21 @@ if (boostBtn) {
   });
 }
 
+
 // === BOOST hold 10s Easter Egg ===
 let boostHoldTimer = null;
 let boostHoldStart = null;
 let boostEasterEggTriggered = false;
-const BOOST_EASTER_EGG_TIME = 10000; // 10 seconds
+const BOOST_EASTER_EGG_TIME = 10000;
 
 function triggerBoostEasterEgg() {
   if (boostEasterEggTriggered) return;
   boostEasterEggTriggered = true;
+
+  if (easterEggAudio) {
+    easterEggAudio.currentTime = 0;
+    easterEggAudio.play();
+  }
   // Only trigger LOGO fly-in animation
   if (typeof startLogoFlyInAnimation === 'function') {
     startLogoFlyInAnimation();
