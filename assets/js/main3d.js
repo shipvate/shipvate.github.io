@@ -1071,8 +1071,9 @@ setupCanvasVisibilityPause();
 function autoMobilePerformanceTuning() {
   // Detect low-end devices
   const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
-  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 6;
-  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 6;
+  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 6; // 6 cores or less
+  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 6; // 4GB or less
+  document.querySelector('#dev-tool').innerHTML = `(${navigator.hardwareConcurrency},${navigator.deviceMemory})`;
   // alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
   // alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
   if (isMobile || lowCore || lowMem) {
