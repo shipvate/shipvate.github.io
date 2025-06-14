@@ -12,7 +12,7 @@ import { SVGLoader } from '../../jsm/loaders/SVGLoader.js';
 // --- Global Configuration ---
 const config = {
   camera: {
-    fov: 30,
+    fov: 40,
     near: 0.2,
     far: 3000,
     position: { x: 0, y: 30, z: 90 },
@@ -53,7 +53,7 @@ const config = {
     color2: 0xfff6e6,
   },
   meteor: {
-    count: 250,
+    count: 180,
     coneRadius: 2,
     coneHeight: 32,
     coneFaces: 3,
@@ -88,8 +88,8 @@ const config = {
     sway: { z: 0.035, x: 0.035, speedZ: 1.5, speedX: 1.1 },
   },
   flame: {
-    count: 20000,
-    size: 120,
+    count: 14000,
+    size: 130,
     colorR: [0.5, 0.7],
     colorG: 1.0,
     colorB: [0.2, 0.4],
@@ -1068,31 +1068,67 @@ function setupCanvasVisibilityPause() {
 setupCanvasVisibilityPause();
 
 // --- Auto-tune for mobile/low-end devices ---
-function autoMobilePerformanceTuning() {
-  // Detect low-end devices
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(navigator.userAgent);
-  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 6; // 6 cores or less
-  const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 6; // 4GB or less
-  document.querySelector('#dev-tool').innerHTML = `(${navigator.hardwareConcurrency},${navigator.deviceMemory})`;
-  // alert(`${navigator.userAgent}\n${navigator.hardwareConcurrency}\n${navigator.deviceMemory}`);
-  // alert(`isMobile: ${isMobile}, lowCore: ${lowCore}, lowMem: ${lowMem}`);
-  if (isMobile || lowCore || lowMem) {
-    // Reduce particle counts
-    config.star.count = 600;
-    config.flame.count = 4500;
-    config.meteor.count = 60;
-    // Reduce particle size
-    config.star.size = 2;
-    config.flame.size = 80;
-    // Lower bloom strength
-    config.bloom.strength = 0.7;
-    config.bloom.radius = 0.7;
-    // Lower render FOV
-    config.camera.fov = 34;
-    // Optionally: disable some effects if needed
-  }
+function getDeviceLevel() {
+  const cpu = navigator.hardwareConcurrency || 1;
+  const ram = navigator.deviceMemory || 1;
+  if (cpu > 8 || ram > 16) return 5;
+  if (cpu > 6 || ram > 8) return 4;
+  if (cpu > 4 || ram > 4) return 3;
+  if (cpu > 2 || ram > 1) return 2;
+  return 1;
 }
-autoMobilePerformanceTuning();
+
+let deviceLevel = getDeviceLevel();
+if (!navigator.deviceMemory) deviceLevel--;
+document.querySelector('#dev-tool').innerHTML =
+  `${navigator.hardwareConcurrency || 0}/${navigator.deviceMemory || 0}/${deviceLevel}`;
+
+if (deviceLevel === 5) {
+  config.star.count = 1800;
+  config.flame.count = 14000;
+  config.meteor.count = 180;
+  config.star.size = 3;
+  config.flame.size = 130;
+  config.bloom.strength = 1.2;
+  config.bloom.radius = 1.2;
+  config.camera.fov = 40;
+} else if (deviceLevel === 4) {
+  config.star.count = 1200;
+  config.flame.count = 9000;
+  config.meteor.count = 120;
+  config.star.size = 2.5;
+  config.flame.size = 110;
+  config.bloom.strength = 1.0;
+  config.bloom.radius = 1.0;
+  config.camera.fov = 38;
+} else if (deviceLevel === 3) {
+  config.star.count = 800;
+  config.flame.count = 6000;
+  config.meteor.count = 80;
+  config.star.size = 2.2;
+  config.flame.size = 90;
+  config.bloom.strength = 0.8;
+  config.bloom.radius = 0.8;
+  config.camera.fov = 36;
+} else if (deviceLevel === 2) {
+  config.star.count = 500;
+  config.flame.count = 3500;
+  config.meteor.count = 40;
+  config.star.size = 1.8;
+  config.flame.size = 70;
+  config.bloom.strength = 0.6;
+  config.bloom.radius = 0.6;
+  config.camera.fov = 32;
+} else {
+  config.star.count = 300;
+  config.flame.count = 2000;
+  config.meteor.count = 20;
+  config.star.size = 1.5;
+  config.flame.size = 60;
+  config.bloom.strength = 0.5;
+  config.bloom.radius = 0.5;
+  config.camera.fov = 30;
+}
 
 // --- Boost (Jet Acceleration) Button Function ---
 let isBoosting = false;
