@@ -1450,8 +1450,21 @@ About Area 2 CSS
 }
 
 .about-content-2 p {
+  color: var(--mainColor2);
   margin-bottom: 35px;
-  font-size: 17px;
+  font-size: 20px;
+}
+
+.about-content-2 .content p {
+  color: var(--paragraphColorSecond);
+  margin-bottom: 35px;
+  font-size: 20px;
+}
+
+.about-content-2 span {
+  color: var(--paragraphColorSecond);
+  margin-bottom: 35px;
+  font-size: 20px;
 }
 
 .about-section-2 .img-wrapper.part-1{
@@ -2837,7 +2850,7 @@ blockquote p, .blockquote p {
 }
 .comments-area .comment-author {
   font-size: 16px;
-  margin-bottom: 6px;
+   margin-bottom: 6px;
   position: relative;
   z-index: 2;
 }
@@ -3517,7 +3530,7 @@ Services Details Area CSS
 
 .services-details-overview .services-details-desc h2 {
   margin-bottom: 15px;
-  font-size: 55px;
+  font-size: 32px;
   color: var(--whiteColor);
 }
 
@@ -5745,7 +5758,7 @@ Footer Area CSS
   right: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+          transform: translateY(-50%);
   transition: var(--transition);
 }
 
@@ -5823,7 +5836,7 @@ Footer Area CSS
   right: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+          transform: translateY(-50%);
   transition: var(--transition);
 }
 
