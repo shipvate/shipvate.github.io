@@ -1080,8 +1080,8 @@ function getDeviceLevel() {
 
 let deviceLevel = getDeviceLevel();
 if (!navigator.deviceMemory) deviceLevel--;
-document.querySelector('#dev-tool').innerHTML =
-  `${navigator.hardwareConcurrency || 0}/${navigator.deviceMemory || 0}/${deviceLevel}`;
+// document.querySelector('#dev-tool').innerHTML =
+//   `${navigator.hardwareConcurrency || 0}/${navigator.deviceMemory || 0}/${deviceLevel}`;
 
 if (deviceLevel === 5) {
   config.star.count = 1800;
