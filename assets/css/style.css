@@ -335,7 +335,7 @@ p:last-child {
 }
 
 .sub-title-2 {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .sub-title-3 {
@@ -347,7 +347,7 @@ p:last-child {
 }
 .sub-title-3 p {
   font-weight: 600;
-  color: var(--blackColor);
+  color: var(--mainColor2);
   font-size: 16px !important;
   margin-bottom: 0 !important;
 }
@@ -1433,9 +1433,18 @@ About Area 2 CSS
   padding-left: 50px;
 }
 
+.about-content-2 h1{
+  font-size: 50px;
+  font-weight: 800;    
+  margin-bottom: 10px;
+  color: var(--whiteColor);
+  text-align: left !important;
+  justify-content: flex-start !important;
+}
+
 .about-content-2 h2 {
-  color: var(--blackColor);
-  font-size: 55px;
+  color: var(--paragraphColor);
+  font-size: 36px;
   margin-bottom: 20px;
   font-weight: 800;
 }
@@ -5436,7 +5445,7 @@ Footer Area CSS
   right: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  transform: translateY(-50%)
+  transform: translateY(-50%);
 }
 
 .footer-widget-info{

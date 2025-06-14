@@ -423,5 +423,21 @@ $(function() {
         }
     });
 });
+/*
+-----------------------------------------------------
+	Enhancement: Prevent offcanvas from closing when clicking accordion-button
+-----------------------------------------------------
+*/
+$(function() {
+    $('.accordion-button').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    $('#navbarOffcanvas').on('hide.bs.offcanvas', function(e) {
+        if ($(document.activeElement).hasClass('accordion-button')) {
+            e.preventDefault();
+        }
+    });
+});
 
 }(jQuery));
