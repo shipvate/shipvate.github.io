@@ -1467,6 +1467,11 @@ About Area 2 CSS
   font-size: 20px;
 }
 
+.about-content-2 .default-btn {
+  background: var(--gridColor);
+  padding: 15px 25px 15px 25px;
+}
+
 .about-section-2 .img-wrapper.part-1{
   position: relative;
   top: -100px;
