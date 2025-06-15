@@ -89,7 +89,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="cases.html" class="dropdown-toggle nav-link active">
+              <a href="cases.html" class="dropdown-toggle nav-link">
                 Use Cases <i class='bx bx-down-arrow-alt'></i>
               </a>
               <ul class="dropdown-menu">
@@ -131,7 +131,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="contact.html" class="nav-link">
+              <a href="contact.html" class="nav-link active">
                 Contact
               </a>
             </li>
@@ -272,112 +272,128 @@
   </div>
   <!-- End Responsive Navbar Area -->
 
-  <!-- Start Case Section -->
-  <div class="about-section-2 pb-70">
+  <!-- Start Contact Section -->
+  <div class="about-section-2 pb-100">
     <div class="container">
-      <div class="row align-items-end" data-aos="fade-right" data-aos-duration="1000">
-        <div class="col-lg-12">
+      <div class="row align-items-start" data-aos="fade-right" data-aos-duration="1000">
+        <div class="col-lg-6 col-md-12">
           <div class="about-content-2">
             <div class="sub-title-3">
-              <p>Use Cases</p>
+              <p>Contact</p>
             </div>
-            <h1>AI 驅動數位孿生應用與行銷轉換</h1>
-            <a class="default-btn" href="/#contact" data-aos="fade-right" data-aos-delay="500">立即諮詢</a>
+            <h1>提交您的需求申請，我們團隊會加速與您聯繫。</h1>
+            <div class="content">
+              <p data-aos="fade-right" data-aos-delay="100">
+                <br>或是<br>商務合作/技術問題：business@shipvate.com<br>行銷合作：marketing@shipvate.com
+              </p>
+            </div>
+            <!-- Google Map Embed -->
+            <div style="width: 100%; height: 300px; margin-top: 30px;">
+              <iframe
+                src="https://www.google.com/maps?q=104台北市中山區復興北路48號7樓&output=embed"
+                width="100%"
+                height="120%"
+                style="border:0;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
           </div>
+        </div>
+        <div class="col-lg-6 col-md-12 pt-70">
+          <div class="user-actions" id="form-success-message" style="display:none;">
+            <i class='bx bx-log-in'></i> <span>您的訊息已順利寄送，我們將盡快與您聯繫。</span>
+          </div>
+          <form action="https://formspree.io/f/xvgrrryl" method="POST" id="contactForm">
+            <div class="row billing-details" data-aos="fade-up" data-aos-duration="1000">
+              <h3 class="title">Contact Form</h3>
+              <div class="row">
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>First Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="firstName" required>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>Last Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="lastName" required>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>Company Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="company" required>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>Position <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="position" required>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>Email Address <span class="required">*</span></label>
+                    <input type="email" class="form-control" name="email" required>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                  <div class="form-group">
+                    <label>Phone <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="phone" required>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                  <div class="form-group">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="title" required>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                  <div class="form-group">
+                    <label>Message <span class="required">*</span></label>
+                    <textarea name="message" id="notes" cols="30" rows="5" class="form-control" required></textarea>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                  <button type="submit" class="default-btn style-3"><i class='bx bx-paper-plane'></i> <span>Submit</span></button>
+                  <button type="reset" class="default-btn style-3" style="margin-left: 10px;"><i class='bx bx-eraser'></i> <span>Reset</span></button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              var form = document.getElementById('contactForm');
+              var successMsg = document.getElementById('form-success-message');
+              form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData(form);
+                fetch(form.action, {
+                  method: 'POST',
+                  body: formData,
+                  headers: { 'Accept': 'application/json' }
+                }).then(function (response) {
+                  if (response.ok) {
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                  } else {
+                    response.json().then(function (data) {
+                      alert(data.error || '送出失敗，請稍後再試。');
+                    });
+                  }
+                }).catch(function () {
+                  alert('送出失敗，請檢查網路或稍後再試。');
+                });
+              });
+            });
+          </script>
         </div>
       </div>
     </div>
   </div>
-  <!-- End Case Section -->
-
-  <!-- Start Brand Section -->
-  <div class="brand-section-2 pb-70">
-    <div class="container">
-      <div class="row align-items-center justify-content-between">
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="100">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-1.jpg" alt="image">
-          </div>
-        </div>
-
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="300">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-2.jpg" alt="image">
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="500">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-3.jpg" alt="image">
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="700">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-4.jpg" alt="image">
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="900">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-5.jpg" alt="image">
-          </div>
-        </div>
-        <div class="col-xl-2 col-lg-2 col-md-4 col-6" data-aos="fade-zoom-in" data-aos-delay="1100">
-          <div class="single-brand">
-            <img src="assets/img/all-img/brand-6.jpg" alt="image">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Brand Section -->
-
-  <!-- Start Project Area Section -->
-  <div class="project-area pb-70">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6 col-md-6" data-aos="fade-zoom-in" data-aos-delay="100">
-          <div class="project-img">
-            <img src="assets/img/all-img/case-image-1.png" alt="image">
-            <div class="project-btn">
-              <a href="cases-details-1.html">
-                <i class='bx bx-arrow-back bx-rotate-180'></i> <span>View</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6" data-aos="fade-zoom-in" data-aos-delay="100">
-          <div class="project-img">
-            <img src="assets/img/all-img/case-image-2.png" alt="image">
-            <div class="project-btn">
-              <a href="cases-details-2.html">
-                <i class='bx bx-arrow-back bx-rotate-180'></i> <span>View</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6" data-aos="fade-zoom-in" data-aos-delay="100">
-          <div class="project-img">
-            <img src="assets/img/all-img/case-image-3.png" alt="image">
-            <div class="project-btn">
-              <a href="cases-details-3.html">
-                <i class='bx bx-arrow-back bx-rotate-180'></i> <span>View</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6" data-aos="fade-zoom-in" data-aos-delay="100">
-          <div class="project-img">
-            <img src="assets/img/all-img/case-image-4.png" alt="image">
-            <div class="project-btn">
-              <a href="cases-details-4.html">
-                <i class='bx bx-arrow-back bx-rotate-180'></i> <span>View</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End Project Area Section -->
+  <!-- End Contact Section -->
 
   <!-- Start Footer Area -->
   <div class="footer-area">
