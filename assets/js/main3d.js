@@ -8,6 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { SVGLoader } from '../../jsm/loaders/SVGLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 // --- Global Configuration ---
 const config = {
@@ -392,6 +393,9 @@ async function init() {
 
   // Load spaceship model and set up materials and animation
   const loader = new GLTFLoader().setPath('models/');
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('jsm/libs/draco/');
+  loader.setDRACOLoader(dracoLoader);
   loader.load('federal_corvette.glb', (gltf) => {
     gltf.scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
