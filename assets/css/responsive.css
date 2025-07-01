@@ -1,5 +1,20 @@
 /* Max width 767px */
 @media only screen and (max-width: 767px) {
+  .about-section .row .col-lg-6,
+  .about-section .row .col-md-6 {
+    margin-bottom: 30px;
+  }
+  
+  .about-section .row:nth-child(2) .col-lg-6:nth-child(2),
+  .about-section .row:nth-child(2) .col-md-6:nth-child(2) {
+    order: -1;
+  }
+  
+  .about-section .row:nth-child(4) .col-lg-6:nth-child(2),
+  .about-section .row:nth-child(4) .col-md-6:nth-child(2) {
+    order: -1;
+  }
+  
   body {
     font-size: 14px;
   }
