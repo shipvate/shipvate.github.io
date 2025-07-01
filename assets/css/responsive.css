@@ -2976,3 +2976,24 @@
   }
 }
 /*# sourceMappingURL=responsive.css.map */
+
+/* Mobile version (max-width: 767px) */
+@media only screen and (max-width: 767px) {
+  .process-wrap .process-content .process-item img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  
+  /* Adjust mobile layout */
+  .process-wrap .process-content .process-item .row {
+    flex-direction: column;
+  }
+  
+  .process-wrap .process-content .process-item .col-lg-4,
+  .process-wrap .process-content .process-item .col-md-4 {
+    margin-bottom: 15px;
+    text-align: center;
+  }
+}

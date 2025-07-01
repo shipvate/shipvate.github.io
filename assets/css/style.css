@@ -3362,7 +3362,8 @@ Service Area CSS
 }
 
 .process-wrap .process-content .process-item-wrap .process-item .process-info {
-  width: calc(100% - 90px);
+  width: calc(100%);
+  /* width: calc(100% - 90px); */
 }
 
 .process-wrap .process-content .process-item-wrap .process-item .process-info h3 {
