@@ -72,6 +72,12 @@
     <priority>0.80</priority>
   </url>
   <url>
+    <loc>https://shipvate.com/sitemap.html</loc>
+    <lastmod>2025-07-05T07:39:21+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://shipvate.com/term-of-services.html</loc>
     <lastmod>2025-07-05T07:39:21+00:00</lastmod>
     <changefreq>yearly</changefreq>
