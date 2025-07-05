@@ -819,7 +819,7 @@ async function startLogoFlyInAnimation() {
   logoFlyAnimating = true;
   // Load SVG
   const loader = new SVGLoader();
-  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgText = await fetch('assets/img/banner/logo.svg').then(r => r.text());
   const svgData = loader.parse(svgText);
   const shapes = [];
   svgData.paths.forEach(path => {
@@ -940,7 +940,7 @@ async function fadeInLogoOnSpaceshipTop(duration = 1.2, onComplete) {
   if (!spaceship) return;
   // First create logo but set opacity 0
   const loader = new SVGLoader();
-  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgText = await fetch('assets/img/banner/logo.svg').then(r => r.text());
   const svgData = loader.parse(svgText);
   const shapes = [];
   svgData.paths.forEach(path => {
@@ -1525,7 +1525,7 @@ async function addLogoOnSpaceshipTop() {
   // Load SVG file
   const loader = new SVGLoader();
   // Use fetch to get SVG content
-  const svgText = await fetch('assets/img/all-img/logo.svg').then(r => r.text());
+  const svgText = await fetch('assets/img/banner/logo.svg').then(r => r.text());
   const svgData = loader.parse(svgText);
   // Only take the first path (logo has only one main path)
   const shapes = [];
