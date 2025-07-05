@@ -575,7 +575,7 @@ Hero Area CSS
 Hero Area 2 CSS
 =================================================*/
 .hero-section-2{
-  background-image: url(../img/banner/background-5.png);
+  background-image: url(../img/banner/background-star.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1127,7 +1127,7 @@ Features Area CSS
 Features Area 2 CSS
 =================================================*/
 .features-section-2{
-  /* background-image: url(../img/banner/background-5.png); */
+  /* background-image: url(../img/banner/background-star.png); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1725,7 +1725,7 @@ Brand Area CSS
 Team Area CSS
 =================================================*/
 .team-section{
-  /* background-image: url(../img/banner/background-5.png); */
+  /* background-image: url(../img/banner/background-star.png); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -5347,7 +5347,7 @@ Footer Area CSS
 }
 
 .ft-shape{
-  background-image: url(../img/banner/background-5.png);
+  background-image: url(../img/banner/background-star.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

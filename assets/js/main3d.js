@@ -189,6 +189,33 @@ let meteorGroup = null;
 
 let hitTimes = 0;
 
+// Dashboard font family constant
+const DASHBOARD_FONT = "Consolas, Monaco, Menlo, Ubuntu Mono, monospace";
+
+// Function to set dashboard font to Consolas
+function setDashboardFont() {
+  // Set font for hit times display
+  const hitTimesElement = document.getElementById('hitTimes');
+  if (hitTimesElement) {
+    hitTimesElement.style.fontFamily = DASHBOARD_FONT;
+  }
+  
+  // Set font for speed value display
+  const speedValueElement = document.getElementById('speedValue');
+  if (speedValueElement) {
+    speedValueElement.style.fontFamily = DASHBOARD_FONT;
+  }
+  
+  // Set font for all dashboard labels
+  const dashboard = document.getElementById('dashboard');
+  if (dashboard) {
+    const labels = dashboard.querySelectorAll('span[style*="Orbitron"]');
+    labels.forEach(label => {
+      label.style.fontFamily = DASHBOARD_FONT;
+    });
+  }
+}
+
 init();
 
 async function init() {
@@ -372,7 +399,10 @@ async function init() {
           info.cooldown = config.meteor.cooldown;
           hitTimes++;
           const hitDom = document.getElementById('hitTimes');
-          if (hitDom) hitDom.textContent = hitTimes <= 999 ? hitTimes : '∞';
+          if (hitDom) {
+            hitDom.textContent = hitTimes <= 999 ? hitTimes : '∞';
+            hitDom.style.fontFamily = DASHBOARD_FONT;
+          }
           updateHitsCircle(hitTimes);
         }
       }
@@ -530,6 +560,9 @@ async function init() {
   postProcessing = new THREE.PostProcessing(renderer);
   postProcessing.outputNode = outputPass.add(bloomPass);
 
+  // Set dashboard font to Consolas
+  setDashboardFont();
+
   window.addEventListener('resize', onWindowResize);
 }
 
@@ -633,7 +666,10 @@ function updateSpeedDisplay(speed) {
     if (speed == maxSpeed) speedBar.setAttribute('width', barMaxWidth+12);
     else speedBar.setAttribute('width', barWidth);
   }
-  if (speedValue) speedValue.textContent = Math.round(speed);
+  if (speedValue) {
+    speedValue.textContent = Math.round(speed);
+    speedValue.style.fontFamily = DASHBOARD_FONT;
+  }
 }
 
 // Update hit times circle stroke based on hit count
