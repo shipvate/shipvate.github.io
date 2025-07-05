@@ -5679,7 +5679,7 @@ Footer Area CSS
   text-align: right;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .copy-right-area .cpr-right ul {

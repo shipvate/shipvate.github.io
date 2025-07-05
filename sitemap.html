@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ShipVate AI 網站地圖 - 查看所有頁面連結">
+  <meta property="og:title" content="網站地圖｜ShipVate AI 旭未有限公司">
+  <meta property="og:description" content="ShipVate AI 網站地圖 - 查看所有頁面連結">
+  <title>網站地圖｜ShipVate AI 旭未有限公司</title>
+
+  <!-- CSS Linked -->
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <!-- favicon Linked -->
+  <link rel="icon" type="image/png" href="assets/img/banner/favicon.png">
+
+  <style>
+    .sitemap-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .sitemap-title h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #ffffff;
+    }
+
+    .sitemap-section {
+      margin-bottom: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 25px;
+    }
+
+    .sitemap-section h2 {
+      color: #00eaff;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #00eaff;
+      padding-bottom: 10px;
+    }
+
+    .sitemap-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sitemap-links li {
+      margin-bottom: 10px;
+    }
+
+    .sitemap-links a {
+      color: #ffffff;
+      text-decoration: none;
+      padding: 8px 12px;
+      display: block;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .sitemap-links a:hover {
+      background: #00eaff;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #00eaff;
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body class="dark-theme">
+  <div class="sitemap-container">
+    <div class="sitemap-title">
+      <h1>ShipVate AI 網站地圖</h1>
+    </div>
+
+    <div class="sitemap-section">
+      <h2>主要頁面</h2>
+      <ul class="sitemap-links">
+        <li><a href="index.html">首頁</a></li>
+        <li><a href="about.html">關於我們</a></li>
+        <li><a href="services.html">服務項目</a></li>
+        <li><a href="contact.html">聯繫我們</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-section">
+      <h2>解決方案</h2>
+      <ul class="sitemap-links">
+        <li><a href="ai-healthcare.html">AI 醫療保健</a></li>
+        <li><a href="ai-manufacturing.html">AI 智慧製造</a></li>
+        <li><a href="ai-ecommerce.html">AI 虛擬購物</a></li>
+        <li><a href="ai-insurance.html">AI 數位保險</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-section">
+      <h2>應用案例</h2>
+      <ul class="sitemap-links">
+        <li><a href="cases.html">使用案例</a></li>
+        <li><a href="blogs.html">應用知識庫</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-section">
+      <h2>法律條款</h2>
+      <ul class="sitemap-links">
+        <li><a href="privacy-policy.html">隱私權政策</a></li>
+        <li><a href="term-of-services.html">服務條款</a></li>
+      </ul>
+    </div>
+
+    <div class="sitemap-section">
+      <h2>SEO 檔案</h2>
+      <ul class="sitemap-links">
+        <li><a href="sitemap.xml">XML 網站地圖</a></li>
+        <li><a href="robots.txt">Robots 規範</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <button class="back-to-top" onclick="scrollToTop()" title="回到頂部">↑</button>
+
+  <script>
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onscroll = function () {
+      const backToTopBtn = document.querySelector('.back-to-top');
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopBtn.style.display = 'block';
+      } else {
+        backToTopBtn.style.display = 'none';
+      }
+    };
+  </script>
+</body>
+
+</html>

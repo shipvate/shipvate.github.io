@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Allow access to CSS and JS files
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+
+# Disallow access to build files and source code
+Disallow: /build/
+Disallow: /src/
+Disallow: /jsm/
+
+# Sitemap location
+Sitemap: https://shipvate.com/sitemap.xml
+
+# Crawl-delay (optional, adjust as needed)
+Crawl-delay: 1
