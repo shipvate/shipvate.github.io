@@ -6222,7 +6222,10 @@ Go Top CSS
 }
 
 @media (max-width: 767px) {
-  #dashboard {
+  #dashboard-1 {
+    display: none !important;
+  }
+  #dashboard-2 {
     display: none !important;
   }
 }
