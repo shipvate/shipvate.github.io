@@ -12,16 +12,10 @@
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://shipvate.com/index.html</loc>
-    <lastmod>2025-07-05T07:39:19+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
     <loc>https://shipvate.com/about.html</loc>
     <lastmod>2025-07-05T07:39:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.70</priority>
   </url>
   <url>
     <loc>https://shipvate.com/cases.html</loc>
@@ -33,31 +27,31 @@
     <loc>https://shipvate.com/ai-healthcare.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://shipvate.com/ai-manufacturing.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://shipvate.com/ai-ecommerce.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://shipvate.com/ai-insurance.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://shipvate.com/services.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://shipvate.com/blogs.html</loc>
@@ -69,24 +63,24 @@
     <loc>https://shipvate.com/contact.html</loc>
     <lastmod>2025-07-05T07:39:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.70</priority>
   </url>
   <url>
     <loc>https://shipvate.com/sitemap.html</loc>
     <lastmod>2025-07-05T07:39:21+00:00</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.50</priority>
   </url>
   <url>
     <loc>https://shipvate.com/term-of-services.html</loc>
     <lastmod>2025-07-05T07:39:21+00:00</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.60</priority>
   </url>
   <url>
     <loc>https://shipvate.com/privacy-policy.html</loc>
     <lastmod>2025-07-05T07:39:21+00:00</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.60</priority>
   </url>
 </urlset>
